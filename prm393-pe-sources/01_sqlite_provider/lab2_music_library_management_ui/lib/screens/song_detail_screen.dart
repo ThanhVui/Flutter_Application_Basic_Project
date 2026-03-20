@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../models/song.dart';
 import '../providers/song_provider.dart';
 import '../providers/favorite_provider.dart';
-import '../providers/auth_provider.dart';
+// import '../providers/auth_provider.dart';
 import 'edit_song_screen.dart';
 
 /// Screen displaying full details of a specific song.

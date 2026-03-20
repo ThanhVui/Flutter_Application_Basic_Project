@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/song.dart';
 import '../providers/song_provider.dart';
-import '../providers/auth_provider.dart';
+// import '../providers/auth_provider.dart';
 
 /// Screen for adding a new artwork to the collection.
 /// Includes a Form with validation for Title, Artist, Year, and Description.

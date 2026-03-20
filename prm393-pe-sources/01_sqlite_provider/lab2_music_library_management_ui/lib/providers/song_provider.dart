@@ -69,12 +69,12 @@ class SongProvider extends ChangeNotifier {
       bool yearMatch = year == "All";
       if (year == "Last 5 years") {
         int current = DateTime.now().year;
-        int? artYear = int.tryParse(e.year);
-        yearMatch = artYear != null && (current - artYear <= 5);
-      } else if (year == "Last 5 years") {
+        int? songYear = int.tryParse(e.year);
+        yearMatch = songYear != null && (current - songYear <= 5);
+      } else if (year == "currentYear") {
         int current = DateTime.now().year;
-        int? artYear = int.tryParse(e.year);
-        yearMatch = artYear != null;
+        int? songYear = int.tryParse(e.year);
+        yearMatch = songYear != null && (current - songYear == 0);
       }
 
       return genreMatch && yearMatch;
