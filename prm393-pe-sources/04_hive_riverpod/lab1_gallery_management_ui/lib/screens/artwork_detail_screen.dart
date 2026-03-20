@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/artwork.dart';
 import '../providers/artwork_provider.dart';
 import '../providers/favorite_provider.dart';
@@ -8,16 +8,15 @@ import 'edit_artwork_screen.dart';
 
 /// Screen displaying full details of a specific artwork.
 /// Provides options to Edit, Delete, or Toggle Favorite status.
-class DetailScreen extends StatelessWidget {
+class DetailScreen extends ConsumerWidget {
   final Artwork artwork;
   const DetailScreen({super.key, required this.artwork});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // Accessing providers for metadata and database operations
-    final artworkProvider = context.read<ArtworkProvider>();
-    final favoriteProvider = context.watch<FavoriteProvider>();
-    final authProvider = context.read<AuthProvider>();
+    final favorite = ref.watch(favoriteProvider);
+    final auth = ref.read(authProvider);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF1F5F9), // Background color
@@ -131,13 +130,13 @@ class DetailScreen extends StatelessWidget {
               color: Colors.white,
               textColor: const Color(0xFF0D6E6E),
               borderColor: const Color(0xFFCBD5E1),
-              onPressed: () => _confirmDelete(context, artworkProvider, authProvider.userId!),
+              onPressed: () => _confirmDelete(context, ref, auth.userId!),
             ),
             const SizedBox(height: 12),
             
             // FAVORITE TOGGLE: Reactively checks if the current user has liked this artwork
             FutureBuilder<bool>(
-              future: favoriteProvider.checkFavorite(authProvider.userId!, artwork.id!),
+              future: favorite.checkFavorite(auth.userId!, artwork.id!),
               builder: (context, snapshot) {
                 bool isFav = snapshot.data ?? false;
                 return _actionButton(
@@ -147,7 +146,7 @@ class DetailScreen extends StatelessWidget {
                   textColor: Colors.white,
                   onPressed: () async {
                     // Update favorite status in SQLite via FavoriteProvider
-                    await favoriteProvider.toggleFavorite(authProvider.userId!, artwork.id!);
+                    await favorite.toggleFavorite(auth.userId!, artwork.id!);
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text(isFav ? "Removed from favorites" : "Added to favorites"), duration: const Duration(seconds: 1)),
@@ -217,7 +216,7 @@ class DetailScreen extends StatelessWidget {
   }
 
   /// Displays a customized confirmation dialog before executing a permanent delete.
-  void _confirmDelete(BuildContext context, ArtworkProvider provider, int userId) {
+  void _confirmDelete(BuildContext context, WidgetRef ref, int userId) {
     showDialog(
       context: context,
       builder: (context) => Dialog(
@@ -253,7 +252,7 @@ class DetailScreen extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: () async {
                         // Permanent deletion from database
-                        await provider.deleteArtwork(artwork.id!, userId);
+                        await ref.read(artworkProvider).deleteArtwork(artwork.id!, userId);
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text("Artwork deleted successfully"), backgroundColor: Colors.red),

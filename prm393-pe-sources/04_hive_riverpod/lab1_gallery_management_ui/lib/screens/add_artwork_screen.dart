@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/artwork.dart';
 import '../providers/artwork_provider.dart';
 import '../providers/auth_provider.dart';
 
 /// Screen for adding a new artwork to the collection.
 /// Includes a Form with validation for Title, Artist, Year, and Description.
-class AddArtworkScreen extends StatefulWidget {
+class AddArtworkScreen extends ConsumerStatefulWidget {
   const AddArtworkScreen({super.key});
 
   @override
-  State<AddArtworkScreen> createState() => _AddArtworkScreenState();
+  ConsumerState<AddArtworkScreen> createState() => _AddArtworkScreenState();
 }
 
-class _AddArtworkScreenState extends State<AddArtworkScreen> {
+class _AddArtworkScreenState extends ConsumerState<AddArtworkScreen> {
   // Key to identify and validate the form
   final _formKey = GlobalKey<FormState>();
 
@@ -37,8 +37,8 @@ class _AddArtworkScreenState extends State<AddArtworkScreen> {
     // 1. Run native Flutter field validators
     if (!_formKey.currentState!.validate()) return;
 
-    final authProvider = context.read<AuthProvider>();
-    final artworkProvider = context.read<ArtworkProvider>();
+    final auth = ref.read(authProvider);
+    final artwork = ref.read(artworkProvider);
 
     // 2. Map text field values to a new Artwork model instance
     Artwork art = Artwork(
@@ -47,11 +47,11 @@ class _AddArtworkScreenState extends State<AddArtworkScreen> {
       year: yearCtrl.text.trim(),
       category: selectedCategory,
       description: descCtrl.text.trim(),
-      createdBy: authProvider.userId!, // Link artwork to the currently logged-in user
+      createdBy: auth.userId!, // Link artwork to the currently logged-in user
     );
 
     // 3. Persist the new artwork using the provider
-    await artworkProvider.addArtwork(art);
+    await artwork.addArtwork(art);
 
     if (mounted) {
       // 4. Provide visual feedback and return to previous screen

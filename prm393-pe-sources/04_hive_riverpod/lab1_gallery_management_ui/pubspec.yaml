@@ -38,7 +38,7 @@ dependencies:
   hive_flutter: ^1.1.0
   shared_preferences: ^2.5.4
   path: ^1.9.1
-  provider: ^6.1.1
+  flutter_riverpod: ^2.5.1
   assets: ^0.0.2
 
 dev_dependencies:

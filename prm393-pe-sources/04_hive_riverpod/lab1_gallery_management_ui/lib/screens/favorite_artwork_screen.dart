@@ -1,32 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/favorite_provider.dart';
 import '../providers/auth_provider.dart';
 
 /// Screen displaying the list of artworks marked as favorites by the current user.
-class FavoriteScreen extends StatefulWidget {
+class FavoriteScreen extends ConsumerStatefulWidget {
   const FavoriteScreen({super.key});
 
   @override
-  State<FavoriteScreen> createState() => _FavoriteScreenState();
+  ConsumerState<FavoriteScreen> createState() => _FavoriteScreenState();
 }
 
-class _FavoriteScreenState extends State<FavoriteScreen> {
+class _FavoriteScreenState extends ConsumerState<FavoriteScreen> {
   @override
   void initState() {
     super.initState();
     // Ensure favorite data is fresh by loading it from SQLite when the screen opens
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final userId = context.read<AuthProvider>().userId!;
-      context.read<FavoriteProvider>().loadFavorites(userId);
+      final userId = ref.read(authProvider).userId!;
+      ref.read(favoriteProvider).loadFavorites(userId);
     });
   }
 
   /// Removes an artwork from the user's favorite list.
   void remove(int artworkId) async {
-    final userId = context.read<AuthProvider>().userId!;
+    final userId = ref.read(authProvider).userId!;
     // toggleFavorite handles both adding and removing based on current state
-    await context.read<FavoriteProvider>().toggleFavorite(userId, artworkId);
+    await ref.read(favoriteProvider).toggleFavorite(userId, artworkId);
     
     if (mounted) {
       // Provide quick feedback to the user
@@ -39,16 +39,16 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   @override
   Widget build(BuildContext context) {
     // Watch favorite provider for real-time list updates
-    final favoriteProvider = context.watch<FavoriteProvider>();
+    final favorites = ref.watch(favoriteProvider);
 
     return Scaffold(
       appBar: AppBar(title: const Text("Favorites")),
-      body: favoriteProvider.favorites.isEmpty
+      body: favorites.favorites.isEmpty
           ? const Center(child: Text("No favorites yet")) // Empty state message
           : ListView.builder(
-              itemCount: favoriteProvider.favorites.length,
+              itemCount: favorites.favorites.length,
               itemBuilder: (_, i) {
-                var art = favoriteProvider.favorites[i];
+                var art = favorites.favorites[i];
                 // Display each favorite artwork as a ListTile
                 return ListTile(
                   leading: const Icon(Icons.favorite, color: Colors.red),

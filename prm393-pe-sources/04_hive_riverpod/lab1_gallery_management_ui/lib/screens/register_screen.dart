@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/auth_provider.dart';
 import '../models/user.dart';
 
 /// Screen to handle new user registration.
 /// Collects Username, Email, and Password, validates them, and stores in SQLite.
-class RegisterScreen extends StatefulWidget {
+class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  ConsumerState<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   // GlobalKey for validating the form state
   final _formKey = GlobalKey<FormState>();
   
@@ -35,10 +35,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
       createdAt: DateTime.now().toString(),
     );
 
-    final authProvider = context.read<AuthProvider>();
+    final auth = ref.read(authProvider);
     
     // 3. Attempt to save the new user to the database via AuthProvider
-    String? error = await authProvider.register(user);
+    String? error = await auth.register(user);
 
     // 4. Handle registration result
     if (error == null) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/favorite_service.dart';
 import '../models/artwork.dart';
 import '../models/favorite.dart';
@@ -50,3 +51,5 @@ class FavoriteProvider extends ChangeNotifier {
     return await _service.isFavorite(userId, artworkId);
   }
 }
+
+final favoriteProvider = ChangeNotifierProvider((ref) => FavoriteProvider());

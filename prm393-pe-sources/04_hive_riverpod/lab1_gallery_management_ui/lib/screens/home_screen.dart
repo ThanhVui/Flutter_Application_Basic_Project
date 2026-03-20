@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/artwork_provider.dart';
 import '../providers/auth_provider.dart';
 import '../providers/favorite_provider.dart';
@@ -10,14 +10,14 @@ import 'login_screen.dart';
 
 /// Main Dashboard screen displaying a summary of the gallery.
 /// Includes banners, statistics, search/filter functionality, and the artwork list.
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   // Local state for current filter selections
   String selectedCategory = "All";
   String selectedYear = "All";
@@ -27,15 +27,15 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     // Load initial data from SQLite via Providers after the first frame is rendered
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final userId = context.read<AuthProvider>().userId!;
-      context.read<ArtworkProvider>().loadArtworks(userId);
-      context.read<FavoriteProvider>().loadFavorites(userId);
+      final userId = ref.read(authProvider).userId!;
+      ref.read(artworkProvider).loadArtworks(userId);
+      ref.read(favoriteProvider).loadFavorites(userId);
     });
   }
 
   /// Clears the user session and navigates back to the LoginScreen.
   void logout() async {
-    await context.read<AuthProvider>().logout();
+    await ref.read(authProvider).logout();
     if (mounted) {
       Navigator.pushReplacement(
         context,
@@ -46,19 +46,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// Triggers a live search based on the user's keystrokes.
   void search(String keyword) {
-    final userId = context.read<AuthProvider>().userId!;
-    context.read<ArtworkProvider>().search(keyword, userId);
+    final userId = ref.read(authProvider).userId!;
+    ref.read(artworkProvider).search(keyword, userId);
   }
 
   /// Applies the selected Category and Year filters to the artwork list.
   void applyFilter() {
-    final userId = context.read<AuthProvider>().userId!;
-    context.read<ArtworkProvider>().filter(selectedCategory, selectedYear, userId);
+    final userId = ref.read(authProvider).userId!;
+    ref.read(artworkProvider).filter(selectedCategory, selectedYear, userId);
   }
 
   /// Helper to calculate the unique number of categories available in the current collection.
   int countCategories() {
-    final artworks = context.read<ArtworkProvider>().artworks;
+    final artworks = ref.read(artworkProvider).artworks;
     final categories = artworks.map((e) => e.category).toSet();
     return categories.length;
   }
@@ -66,9 +66,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     // Watching providers to reactively update the UI when data changes
-    final authProvider = context.watch<AuthProvider>();
-    final artworkProvider = context.watch<ArtworkProvider>();
-    final favoriteProvider = context.watch<FavoriteProvider>();
+    final auth = ref.watch(authProvider);
+    final artworks = ref.watch(artworkProvider);
+    final favorites = ref.watch(favoriteProvider);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF1F5F9), // Slate-light background
@@ -133,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text("Gallery Collection", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
-                        Text("Welcome back, ${authProvider.username ?? 'User'}", style: const TextStyle(color: Colors.white70, fontSize: 13)),
+                        Text("Welcome back, ${auth.username ?? 'User'}", style: const TextStyle(color: Colors.white70, fontSize: 13)),
                       ],
                     ),
                   ],
@@ -157,8 +157,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _statCard(Icons.photo_library_outlined, artworkProvider.totalArtworks.toString(), "Artworks"),
-                    _statCard(Icons.favorite_border_rounded, favoriteProvider.totalFavorites.toString(), "Favorites"),
+                    _statCard(Icons.photo_library_outlined, artworks.totalArtworks.toString(), "Artworks"),
+                    _statCard(Icons.favorite_border_rounded, favorites.totalFavorites.toString(), "Favorites"),
                     _statCard(Icons.category_outlined, countCategories().toString(), "Categories"),
                   ],
                 ),
@@ -221,18 +221,18 @@ class _HomeScreenState extends State<HomeScreen> {
             // 5. ARTWORK COLLECTION LIST: Dynamically rendered list of the user's artworks
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
-              child: Text("Artwork Collection (${artworkProvider.artworks.length})", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              child: Text("Artwork Collection (${artworks.artworks.length})", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             ),
             
-            artworkProvider.isLoading
+            artworks.isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(), // Scroll managed by SingleChildScrollView
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: artworkProvider.artworks.length,
+                    itemCount: artworks.artworks.length,
                     itemBuilder: (_, index) {
-                      var art = artworkProvider.artworks[index];
+                      var art = artworks.artworks[index];
                       // Each list item is wrapped in a Material Card
                       return Container(
                         margin: const EdgeInsets.only(bottom: 12),

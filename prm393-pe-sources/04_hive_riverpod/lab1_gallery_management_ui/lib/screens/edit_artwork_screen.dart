@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/artwork.dart';
 import '../providers/artwork_provider.dart';
 
 /// Screen for editing an existing artwork's details.
 /// Pre-fills the form with current artwork data from the selected object.
-class EditScreen extends StatefulWidget {
+class EditScreen extends ConsumerStatefulWidget {
   final Artwork artwork; // The artwork object to be edited
   const EditScreen({super.key, required this.artwork});
 
   @override
-  State<EditScreen> createState() => _EditScreenState();
+  ConsumerState<EditScreen> createState() => _EditScreenState();
 }
 
-class _EditScreenState extends State<EditScreen> {
+class _EditScreenState extends ConsumerState<EditScreen> {
   // GlobalKey for form validation
   final _formKey = GlobalKey<FormState>();
 
@@ -44,7 +44,7 @@ class _EditScreenState extends State<EditScreen> {
     // 1. Validate fields (Required fields and number formats)
     if (!_formKey.currentState!.validate()) return;
 
-    final provider = context.read<ArtworkProvider>();
+    final provider = ref.read(artworkProvider);
 
     // 2. Build a new Artwork object with updated values while keeping the original ID
     Artwork updatedArt = Artwork(

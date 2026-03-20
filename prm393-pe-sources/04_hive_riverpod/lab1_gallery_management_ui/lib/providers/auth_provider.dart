@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/auth_service.dart';
 import '../utils/session_manager.dart';
 import '../models/user.dart';
@@ -56,3 +57,5 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners(); // Navigate user back to LoginScreen
   }
 }
+
+final authProvider = ChangeNotifierProvider((ref) => AuthProvider());

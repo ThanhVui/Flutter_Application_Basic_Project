@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/artwork_service.dart';
 import '../models/artwork.dart';
 
@@ -83,3 +84,5 @@ class ArtworkProvider extends ChangeNotifier {
     notifyListeners(); // Refresh the list view in the UI
   }
 }
+
+final artworkProvider = ChangeNotifierProvider((ref) => ArtworkProvider());

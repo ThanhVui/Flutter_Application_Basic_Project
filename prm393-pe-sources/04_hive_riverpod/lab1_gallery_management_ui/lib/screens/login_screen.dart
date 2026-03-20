@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/auth_provider.dart';
 import 'home_screen.dart';
 import 'register_screen.dart';
 
 /// Screen for user authentication.
 /// Handles username and password input, validation, and login logic.
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   // GlobalKey for validating the form state
   final _formKey = GlobalKey<FormState>();
 
@@ -26,10 +26,10 @@ class _LoginScreenState extends State<LoginScreen> {
     // 1. Validate form fields first (Check for empty fields)
     if (!_formKey.currentState!.validate()) return;
 
-    final authProvider = context.read<AuthProvider>();
+    final auth = ref.read(authProvider);
     
     // 2. Call the AuthProvider to verify credentials against the SQLite database
-    String? error = await authProvider.login(
+    String? error = await auth.login(
       usernameCtrl.text.trim(),
       passwordCtrl.text,
     );
