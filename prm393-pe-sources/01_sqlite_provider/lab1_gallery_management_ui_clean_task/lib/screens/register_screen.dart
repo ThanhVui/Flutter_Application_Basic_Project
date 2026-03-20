@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import '../models/user.dart';
 
+// Task 1 – User Registration
 /// Screen to handle new user registration.
 /// Collects Username, Email, and Password, validates them, and stores in SQLite.
 class RegisterScreen extends StatefulWidget {
@@ -22,7 +23,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final passwordCtrl = TextEditingController();
   final confirmCtrl = TextEditingController();
 
-  /// Logic to execute when the 'Register' button is pressed.
+  // Task 1 – User Registration (Action): Logic to execute when the 'Register' button is pressed.
   void register() async {
     // 1. Validate all form fields (Check for empty, email format, and password match)
     if (!_formKey.currentState!.validate()) return;

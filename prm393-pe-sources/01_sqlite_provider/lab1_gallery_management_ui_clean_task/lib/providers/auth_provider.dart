@@ -17,7 +17,7 @@ class AuthProvider extends ChangeNotifier {
   String? get username => _username; 
   bool get isLoggedIn => _userId != null;
 
-  /// Checks if a valid user session exists in local storage.
+  // Task 3 – Session Management: Checks if a valid user session exists in local storage.
   /// This is called when the app starts to auto-login the user.
   Future<void> checkSession() async {
     _userId = await SessionManager.getUser();
@@ -25,13 +25,13 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners(); // Refresh UI based on session status
   }
 
-  /// Handles the registration of a new user.
+  // Task 1 – User Registration: Handles the registration of a new user.
   /// Returns an error message as a String, or null if successful.
   Future<String?> register(User user) async {
     return await _authService.register(user);
   }
 
-  /// Authenticates the user with a username and password.
+  // Task 2 – User Login: Authenticates the user with a username and password.
   /// If successful, saves the session locally and updates the app state.
   Future<String?> login(String username, String password) async {
     User? user = await _authService.login(username, password);
@@ -48,7 +48,7 @@ class AuthProvider extends ChangeNotifier {
     return "Invalid username or password";
   }
 
-  /// Logs the user out by clearing local session data and resetting the state.
+  // Task 4 – Logout: Logs the user out by clearing local session data and resetting the state.
   Future<void> logout() async {
     await SessionManager.clearSession(); // Remove from local storage
     _userId = null;

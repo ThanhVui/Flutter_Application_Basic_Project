@@ -1,4 +1,5 @@
-/// Model class representing
+// Task 5.3 – Favorite Model
+/// Model class representing a favorite artwork relationship.
 class Favorite {
   int? id;
   int userId;

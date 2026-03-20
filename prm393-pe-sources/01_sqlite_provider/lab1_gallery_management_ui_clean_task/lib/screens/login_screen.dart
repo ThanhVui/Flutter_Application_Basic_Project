@@ -4,6 +4,10 @@ import '../providers/auth_provider.dart';
 import 'home_screen.dart';
 import 'register_screen.dart';
 
+// Task 2 – User Login
+// Task 1 – User Registration
+/// Screen to handle new user registration.
+/// Collects Username, Email, and Password, validates them, and stores in SQLite.
 /// Screen for user authentication.
 /// Handles username and password input, validation, and login logic.
 class LoginScreen extends StatefulWidget {
@@ -21,7 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final usernameCtrl = TextEditingController();
   final passwordCtrl = TextEditingController();
 
-  /// Logic to execute when the 'Login' button is pressed.
+  // Task 2 – User Login (Action): Logic to execute when the 'Login' button is pressed.
   void login() async {
     // 1. Validate form fields first (Check for empty fields)
     if (!_formKey.currentState!.validate()) return;

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/favorite_provider.dart';
 import '../providers/auth_provider.dart';
 
+// Task 13 – Favorite Artworks Screen
 /// Screen displaying the list of artworks marked as favorites by the current user.
 class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({super.key});
@@ -22,7 +23,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     });
   }
 
-  /// Removes an artwork from the user's favorite list.
+  // Task 13 – Favorite Artworks Screen (Remove): Removes an artwork from the user's favorite list.
   void remove(int artworkId) async {
     final userId = context.read<AuthProvider>().userId!;
     // toggleFavorite handles both adding and removing based on current state

@@ -4,6 +4,7 @@ import '../models/artwork.dart';
 import '../providers/artwork_provider.dart';
 import '../providers/auth_provider.dart';
 
+// Task 6 – Add Artwork
 /// Screen for adding a new artwork to the collection.
 /// Includes a Form with validation for Title, Artist, Year, and Description.
 class AddArtworkScreen extends StatefulWidget {
@@ -32,7 +33,7 @@ class _AddArtworkScreenState extends State<AddArtworkScreen> {
     "Portrait",
   ];
 
-  /// Gathers input data, validates it, and saves a new Artwork to SQLite.
+  // Task 6 – Add Artwork (Save): Gathers input data, validates it, and saves a new Artwork to SQLite.
   void save() async {
     // 1. Run native Flutter field validators
     if (!_formKey.currentState!.validate()) return;

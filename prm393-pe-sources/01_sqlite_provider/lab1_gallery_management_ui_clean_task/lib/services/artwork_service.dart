@@ -6,7 +6,7 @@ import '../models/artwork.dart';
 class ArtworkService {
   final dbHelper = DBHelper();
 
-  /// Create: Inserts a new Artwork entry into the SQLite 'artworks' table.
+  // Task 6 – Add Artwork: Inserts a new Artwork entry into the SQLite 'artworks' table.
   Future<int> insertArtwork(Artwork artwork) async {
     final db = await dbHelper.database;
     // Converts the Dart [Artwork] object into a Map for the SQL engine
@@ -28,7 +28,7 @@ class ArtworkService {
     return result.map((e) => Artwork.fromMap(e)).toList();
   }
 
-  /// Update: Modifies existing artwork details in the SQLite database based on its ID.
+  // Task 8 – Update Artwork: Modifies existing artwork details in the SQLite database based on its ID.
   Future<int> updateArtwork(Artwork artwork) async {
     final db = await dbHelper.database;
 
@@ -40,7 +40,7 @@ class ArtworkService {
     );
   }
 
-  /// Delete: Removes an artwork entry from the database using its primary key [id].
+  // Task 9 – Delete Artwork: Removes an artwork entry from the database using its primary key [id].
   Future<int> deleteArtwork(int id) async {
     final db = await dbHelper.database;
 
@@ -51,7 +51,7 @@ class ArtworkService {
     );
   }
 
-  /// Search: Finds artworks by Title using SQL 'LIKE' pattern matching for a specific user.
+  // Task 10 – Search Artworks: Finds artworks by Title using SQL 'LIKE' pattern matching for a specific user.
   Future<List<Artwork>> searchArtworks(String keyword, int userId) async {
     final db = await dbHelper.database;
 

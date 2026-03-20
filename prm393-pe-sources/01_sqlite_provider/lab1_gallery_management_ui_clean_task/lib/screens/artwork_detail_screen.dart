@@ -6,6 +6,7 @@ import '../providers/favorite_provider.dart';
 import '../providers/auth_provider.dart';
 import 'edit_artwork_screen.dart';
 
+// Task 7 – Artwork Detail
 /// Screen displaying full details of a specific artwork.
 /// Provides options to Edit, Delete, or Toggle Favorite status.
 class DetailScreen extends StatelessWidget {
@@ -135,7 +136,7 @@ class DetailScreen extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             
-            // FAVORITE TOGGLE: Reactively checks if the current user has liked this artwork
+            // Task 12 – Favorite Artworks (Toggle): Reactively checks if the current user has liked this artwork
             FutureBuilder<bool>(
               future: favoriteProvider.checkFavorite(authProvider.userId!, artwork.id!),
               builder: (context, snapshot) {
@@ -216,7 +217,7 @@ class DetailScreen extends StatelessWidget {
     );
   }
 
-  /// Displays a customized confirmation dialog before executing a permanent delete.
+  // Task 9 – Delete Artwork (Dialog): Displays a customized confirmation dialog before executing a permanent delete.
   void _confirmDelete(BuildContext context, ArtworkProvider provider, int userId) {
     showDialog(
       context: context,

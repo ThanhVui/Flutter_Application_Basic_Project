@@ -39,7 +39,7 @@ class DBHelper {
     );
   }
 
-  // ============================== TABLE CREATION LOGIC ==============================
+  // ============================== TABLE CREATION LOGIC (Task 6 – Database Relationships) ==============================
   
   /// Creates the necessary tables: users, artworks, and favorites.
   Future<void> createTables(Database db) async {
@@ -68,6 +68,7 @@ class DBHelper {
     )
     ''');
 
+    // Task 6: One user can favorite multiple artworks (User -> FavoriteArtwork Relationship)
     // 3. Create 'favorites' table to link users with their favorite artworks (Many-to-Many Relationship)
     await db.execute('''
     CREATE TABLE favorites(

@@ -16,7 +16,7 @@ class ArtworkProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   int get totalArtworks => _artworks.length;
 
-  /// Fetches all artworks from the database for a specific user.
+  // Task 5 – Home Screen (Artwork List): Fetches all artworks from the database for a specific user.
   /// Notifies listeners to show/hide loading indicators during the process.
   Future<void> loadArtworks(int userId) async {
     _isLoading = true;
@@ -29,7 +29,7 @@ class ArtworkProvider extends ChangeNotifier {
     notifyListeners(); 
   }
 
-  /// Adds a new artwork to the database.
+  // Task 6 – Add Artwork: Adds a new artwork to the database.
   /// After adding, it automatically refreshes the local list to keep the UI in sync.
   Future<void> addArtwork(Artwork artwork) async {
     await _service.insertArtwork(artwork);
@@ -37,28 +37,28 @@ class ArtworkProvider extends ChangeNotifier {
     await loadArtworks(artwork.createdBy);
   }
 
-  /// Updates an existing artwork's details.
+  // Task 8 – Update Artwork: Updates an existing artwork's details.
   /// Re-fetches the database content upon successful modification.
   Future<void> updateArtwork(Artwork artwork) async {
     await _service.updateArtwork(artwork);
     await loadArtworks(artwork.createdBy);
   }
 
-  /// Deletes an artwork from the database using its unique [id].
+  // Task 9 – Delete Artwork: Deletes an artwork from the database using its unique [id].
   /// Requires [userId] to refresh the correct user's collection list.
   Future<void> deleteArtwork(int id, int userId) async {
     await _service.deleteArtwork(id);
     await loadArtworks(userId);
   }
 
-  /// Searches artworks by title keyword for a specific user.
+  // Task 10 – Search Artworks: Searches artworks by title keyword for a specific user.
   /// Updates the [_artworks] list reactively as the user types in the search bar.
   Future<void> search(String keyword, int userId) async {
     _artworks = await _service.searchArtworks(keyword, userId);
     notifyListeners();
   }
 
-  /// Filters artworks based on category and creation year.
+  // Task 11 – Filter Artworks: Filters artworks based on category and creation year.
   /// Logic: Fetches all artworks then applies filters locally for better performance.
   void filter(String category, String year, int userId) async {
     // 1. Get a fresh copy of all user artworks

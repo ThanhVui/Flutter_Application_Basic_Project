@@ -6,7 +6,7 @@ import '../models/user.dart';
 class AuthService {
   final dbHelper = DBHelper();
 
-  /// Register: Adds a new user account to the SQLite database.
+  // Task 1 – User Registration: Adds a new user account to the SQLite database.
   /// Checks for username uniqueness before final insertion. 
   /// Returns [null] on success or an error message if the username is taken.
   Future<String?> register(User user) async {
@@ -28,7 +28,7 @@ class AuthService {
     return null; // Return successfully without error message
   }
 
-  /// Login: Verifies if a user exists with the provided credentials.
+  // Task 2 – User Login: Verifies if a user exists with the provided credentials.
   /// Returns a [User] object if the username and password match, otherwise [null].
   Future<User?> login(String username, String password) async {
     final db = await dbHelper.database;

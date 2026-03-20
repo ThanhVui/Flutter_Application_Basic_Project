@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../models/artwork.dart';
 import '../providers/artwork_provider.dart';
 
+// Task 8 – Update Artwork
 /// Screen for editing an existing artwork's details.
 /// Pre-fills the form with current artwork data from the selected object.
 class EditScreen extends StatefulWidget {
@@ -39,7 +40,7 @@ class _EditScreenState extends State<EditScreen> {
     descCtrl = TextEditingController(text: widget.artwork.description);
   }
 
-  /// Collects updated data, validates fields, and sends update request to SQLite.
+  // Task 8 – Update Artwork (Update): Collects updated data, validates fields, and sends update request to SQLite.
   void update() async {
     // 1. Validate fields (Required fields and number formats)
     if (!_formKey.currentState!.validate()) return;

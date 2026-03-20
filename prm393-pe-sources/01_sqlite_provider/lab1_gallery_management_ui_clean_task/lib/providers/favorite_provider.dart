@@ -12,11 +12,11 @@ class FavoriteProvider extends ChangeNotifier {
   List<Artwork> _favorites = [];
   int _totalFavorites = 0;
 
-  // Getters for public access to private state variables
+  // Task 14 – Gallery Statistics: Getters for public access to private state variables
   List<Artwork> get favorites => _favorites;
   int get totalFavorites => _totalFavorites;
 
-  /// Loads all favorite artworks and the total count for a user ID.
+  // Task 13 – Favorite Artworks Screen: Loads all favorite artworks and the total count for a user ID.
   /// Used primarily on the [HomeScreen] dashboard and the [FavoriteScreen].
   Future<void> loadFavorites(int userId) async {
     _favorites = await _service.getFavorites(userId);
@@ -24,7 +24,7 @@ class FavoriteProvider extends ChangeNotifier {
     notifyListeners(); // Notify UI components that favorited list has changed
   }
 
-  /// Toggles the favorite status of an artwork for a specific user ID.
+  // Task 12 – Favorite Artworks: Toggles the favorite status of an artwork for a specific user ID.
   /// If [isFav] is true, it removes the favorite; otherwise, it adds it.
   Future<void> toggleFavorite(int userId, int artworkId) async {
     bool isFav = await _service.isFavorite(userId, artworkId);

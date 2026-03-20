@@ -1,4 +1,5 @@
-/// Model class representing
+// Task 5.2 – Artwork Model
+/// Model class representing an artwork.
 class Artwork {
   int? id;
   String title;

@@ -23,7 +23,7 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  /// Check login session and initialize AuthProvider state before starting
+  // Task 3 – Session Management: Check login session and initialize AuthProvider state before starting
   Future<Widget> _getStartScreen(BuildContext context) async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     

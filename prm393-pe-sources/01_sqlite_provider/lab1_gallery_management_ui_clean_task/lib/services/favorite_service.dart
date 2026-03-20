@@ -7,7 +7,7 @@ import '../models/artwork.dart';
 class FavoriteService {
   final dbHelper = DBHelper();
 
-  /// Adds an artwork to the user's favorite list.
+  // Task 12 – Favorite Artworks (Add): Adds an artwork to the user's favorite list.
   /// Prevents duplicate entries. Returns [null] on success, otherwise an error message.
   Future<String?> addFavorite(Favorite fav) async {
     final db = await dbHelper.database;
@@ -28,7 +28,7 @@ class FavoriteService {
     return null;
   }
 
-  /// Retrieves all artwork objects that a user has favorited.
+  // Task 13 – Favorite Artworks Screen (Retrieve): Retrieves all artwork objects that a user has favorited.
   /// Uses an INNER JOIN SQL query to link the favorites table back to the artwork data.
   Future<List<Artwork>> getFavorites(int userId) async {
     final db = await dbHelper.database;
@@ -55,7 +55,7 @@ class FavoriteService {
     return result.isNotEmpty;
   }
 
-  /// Removes an artwork from the user's favorites collection.
+  // Task 13 – Favorite Artworks Screen (Remove): Removes an artwork from the user's favorites collection.
   Future<int> removeFavorite(int userId, int artworkId) async {
     final db = await dbHelper.database;
 
@@ -66,7 +66,7 @@ class FavoriteService {
     );
   }
 
-  /// Calculates the total number of favorite items for a given user.
+  // Task 14 – Gallery Statistics (Count): Calculates the total number of favorite items for a given user.
   /// Result is typically displayed as a summary statistic on the HomeScreen.
   Future<int> countFavorites(int userId) async {
     final db = await dbHelper.database;

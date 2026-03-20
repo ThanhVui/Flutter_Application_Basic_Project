@@ -8,6 +8,7 @@ import 'add_artwork_screen.dart';
 import 'artwork_detail_screen.dart';
 import 'login_screen.dart';
 
+// Task 5 – Home Screen (Artwork List)
 /// Main Dashboard screen displaying a summary of the gallery.
 /// Includes banners, statistics, search/filter functionality, and the artwork list.
 class HomeScreen extends StatefulWidget {
@@ -33,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  /// Clears the user session and navigates back to the LoginScreen.
+  // Task 4 – Logout (Action): Clears the user session and navigates back to the LoginScreen.
   void logout() async {
     await context.read<AuthProvider>().logout();
     if (mounted) {
@@ -44,13 +45,13 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  /// Triggers a live search based on the user's keystrokes.
+  // Task 10 – Search Artworks (Action): Triggers a live search based on the user's keystrokes.
   void search(String keyword) {
     final userId = context.read<AuthProvider>().userId!;
     context.read<ArtworkProvider>().search(keyword, userId);
   }
 
-  /// Applies the selected Category and Year filters to the artwork list.
+  // Task 11 – Filter Artworks (Action): Applies the selected Category and Year filters to the artwork list.
   void applyFilter() {
     final userId = context.read<AuthProvider>().userId!;
     context.read<ArtworkProvider>().filter(selectedCategory, selectedYear, userId);
@@ -141,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-            // 3. STATISTICS SECTION: Quick overview of Artworks, Favorites, and Categories
+            // Task 14 – Gallery Statistics: Quick overview of Artworks, Favorites, and Categories
             const Padding(
               padding: EdgeInsets.fromLTRB(20, 24, 20, 12),
               child: Text("Gallery Statistics", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
@@ -165,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-            // 4. SEARCH & FILTERS SECTION: Responsive inputs for narrowing down the collection
+            // Task 10 & 11 – SEARCH & FILTERS SECTION: Responsive inputs for narrowing down the collection
             Padding(
               padding: const EdgeInsets.all(16),
               child: Container(

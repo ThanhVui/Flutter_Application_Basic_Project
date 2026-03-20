@@ -1,4 +1,5 @@
-/// Model class representing a in the application.
+// Task 5.1 – User Model
+/// Model class representing a user in the application.
 class User {
   int? id;
   String username;
