@@ -6,11 +6,10 @@ import 'providers/artwork_provider.dart';
 import 'providers/favorite_provider.dart';
 import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
-import 'utils/session_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Initialize Hive
   await HiveHelper.initHive();
 
@@ -32,10 +31,10 @@ class MyApp extends StatelessWidget {
   /// Check login session and initialize AuthProvider state before starting
   Future<Widget> _getStartScreen(BuildContext context) async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    
+
     // Crucial: Load the stored session into the AuthProvider's memory
     await authProvider.checkSession();
-    
+
     if (authProvider.isLoggedIn) {
       return const HomeScreen();
     } else {
