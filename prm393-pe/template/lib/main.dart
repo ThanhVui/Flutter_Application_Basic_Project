@@ -1,6 +1,6 @@
 // Import package material and provider
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+// import 'package:provider/provider.dart';
 
 // Import screens and providers
 // import 'providers/auth_provider.dart';
