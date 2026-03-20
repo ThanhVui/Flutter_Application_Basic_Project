@@ -53,8 +53,8 @@ class SongService {
 
     final result = await db.query(
       'songs',
-      where: 'title LIKE ?', // Case-insensitive title search
-      whereArgs: ['%$keyword%'],
+      where: 'title LIKE ? OR artist LIKE ?', // Case-insensitive title search
+      whereArgs: ['%$keyword%', '%$keyword%'],
     );
 
     return result.map((e) => Song.fromMap(e)).toList();

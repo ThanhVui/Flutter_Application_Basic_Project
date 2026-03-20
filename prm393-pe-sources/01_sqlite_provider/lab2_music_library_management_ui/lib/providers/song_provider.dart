@@ -56,26 +56,30 @@ class SongProvider extends ChangeNotifier {
 
   /// Filters songs based on category and creation year.
   /// Logic: Fetches all songs then applies filters locally for better performance.
-  // void filter(String category, String year, int userId) async {
-  //   // 1. Get a fresh copy of all user songs
-  //   List<Song> all = await _service.getSongs(userId);
+  void filter(String genre, String year) async {
+    // 1. Get a fresh copy of all user songs
+    List<Song> all = await _service.getSongs();
 
-  //   // 2. Apply filtering logic on the collection
-  //   _songs = all.where((e) {
-  //     // Category filter: match if "All" is selected or if specific category matches
-  //     bool catMatch = category == "All" || e.category == category;
+    // 2. Apply filtering logic on the collection
+    _songs = all.where((e) {
+      // Genre filter: match if "All" is selected or if specific category matches
+      bool genreMatch = genre == "All" || e.genre == genre;
 
-  //     // Year filter: match if "All" is selected or if song was created in last 5 years
-  //     bool yearMatch = year == "All";
-  //     if (year == "Last 5 years") {
-  //       int current = DateTime.now().year;
-  //       int? artYear = int.tryParse(e.year);
-  //       yearMatch = artYear != null && (current - artYear <= 5);
-  //     }
+      // Year filter: match if "All" is selected or if song was created in last 5 years
+      bool yearMatch = year == "All";
+      if (year == "Last 5 years") {
+        int current = DateTime.now().year;
+        int? artYear = int.tryParse(e.year);
+        yearMatch = artYear != null && (current - artYear <= 5);
+      } else if (year == "Last 5 years") {
+        int current = DateTime.now().year;
+        int? artYear = int.tryParse(e.year);
+        yearMatch = artYear != null;
+      }
 
-  //     return catMatch && yearMatch;
-  //   }).toList();
+      return genreMatch && yearMatch;
+    }).toList();
 
-  //   notifyListeners(); // Refresh the list view in the UI
-  // }
+    notifyListeners(); // Refresh the list view in the UI
+  }
 }

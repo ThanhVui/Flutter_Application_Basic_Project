@@ -49,20 +49,16 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // /// Triggers a live search based on the user's keystrokes.
-  // void search(String keyword) {
-  //   final userId = context.read<AuthProvider>().userId!;
-  //   context.read<SongProvider>().search(keyword, userId);
-  // }
+  void search(String keyword) {
+    // final userId = context.read<AuthProvider>().userId!;
+    context.read<SongProvider>().search(keyword);
+  }
 
   // /// Applies the selected Category and Year filters to the song list.
-  // void applyFilter() {
-  //   final userId = context.read<AuthProvider>().userId!;
-  //   context.read<SongProvider>().filter(
-  //     selectedCategory,
-  //     selectedYear,
-  //     userId,
-  //   );
-  // }
+  void applyFilter() {
+    // final userId = context.read<AuthProvider>().userId!;
+    context.read<SongProvider>().filter(selectedCategory, selectedYear);
+  }
 
   /// Helper to calculate the unique number of categories available in the current collection.
   // int countCategories() {
@@ -214,81 +210,76 @@ class _HomeScreenState extends State<HomeScreen> {
             //   ),
             // ),
 
-            // // 4. SEARCH & FILTERS SECTION: Responsive inputs for narrowing down the collection
-            // Padding(
-            //   padding: const EdgeInsets.all(16),
-            //   child: Container(
-            //     padding: const EdgeInsets.all(16),
-            //     decoration: BoxDecoration(
-            //       color: Colors.white,
-            //       borderRadius: BorderRadius.circular(24),
-            //     ),
-            //     child: Column(
-            //       children: [
-            //         // Dynamic Search Input
-            //         TextField(
-            //           onChanged: search,
-            //           decoration: InputDecoration(
-            //             hintText: "Search by title...",
-            //             prefixIcon: const Icon(
-            //               Icons.search,
-            //               color: Color(0xFF64748B),
-            //             ),
-            //             filled: true,
-            //             fillColor: Colors.white,
-            //             border: OutlineInputBorder(
-            //               borderRadius: BorderRadius.circular(16),
-            //               borderSide: const BorderSide(
-            //                 color: Color(0xFFE2E8F0),
-            //               ),
-            //             ),
-            //             enabledBorder: OutlineInputBorder(
-            //               borderRadius: BorderRadius.circular(16),
-            //               borderSide: const BorderSide(
-            //                 color: Color(0xFFE2E8F0),
-            //               ),
-            //             ),
-            //           ),
-            //         ),
-            //         const SizedBox(height: 16),
-            //         // Dropdown filters for Year and Category
-            //         Row(
-            //           children: [
-            //             Expanded(
-            //               child: _buildFilterDropdown(
-            //                 "Year filter",
-            //                 selectedYear,
-            //                 ["All", "Last 5 years"],
-            //                 (v) {
-            //                   setState(() => selectedYear = v!);
-            //                   applyFilter();
-            //                 },
-            //               ),
-            //             ),
-            //             const SizedBox(width: 12),
-            //             Expanded(
-            //               child: _buildFilterDropdown(
-            //                 "Category",
-            //                 selectedCategory,
-            //                 [
-            //                   "All",
-            //                   "Abstract",
-            //                   "Realism",
-            //                   "Landscape",
-            //                   "Portrait",
-            //                 ],
-            //                 (v) {
-            //                   setState(() => selectedCategory = v!);
-            //                   applyFilter();
-            //                 },
-            //               ),
-            //             ),
-            //           ],
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // ),
+            // // Task: 4. SEARCH & FILTERS SECTION: Responsive inputs for narrowing down the collection
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                child: Column(
+                  children: [
+                    // Dynamic Search Input
+                    TextField(
+                      onChanged: search,
+                      decoration: InputDecoration(
+                        hintText: "Search by title...",
+                        prefixIcon: const Icon(
+                          Icons.search,
+                          color: Color(0xFF64748B),
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: const BorderSide(
+                            color: Color(0xFFE2E8F0),
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: const BorderSide(
+                            color: Color(0xFFE2E8F0),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    // Task: Filter ===================
+                    // Dropdown filters for Year and Category
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildFilterDropdown(
+                            "Year filter",
+                            selectedYear,
+                            ["All", "Last 5 years", "Current year"],
+                            (v) {
+                              setState(() => selectedYear = v!);
+                              applyFilter();
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _buildFilterDropdown(
+                            "Category",
+                            selectedCategory,
+                            ["All", "Pop", "Rock", "Ballad", "EDM"],
+                            (v) {
+                              setState(() => selectedCategory = v!);
+                              applyFilter();
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
 
             // 5. ARTWORK COLLECTION LIST: Dynamically rendered list of the user's songs
             Padding(
@@ -420,36 +411,36 @@ class _HomeScreenState extends State<HomeScreen> {
   // }
 
   /// Reusable widget to build labeled dropdown menus used for filtering.
-  // Widget _buildFilterDropdown(
-  //   String label,
-  //   String value,
-  //   List<String> items,
-  //   Function(String?) onChanged,
-  // ) {
-  //   return DropdownButtonFormField<String>(
-  //     value: value,
-  //     decoration: InputDecoration(
-  //       labelText: label,
-  //       labelStyle: const TextStyle(fontSize: 12, color: Color(0xFF64748B)),
-  //       contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-  //       border: OutlineInputBorder(
-  //         borderRadius: BorderRadius.circular(12),
-  //         borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
-  //       ),
-  //       enabledBorder: OutlineInputBorder(
-  //         borderRadius: BorderRadius.circular(12),
-  //         borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
-  //       ),
-  //     ),
-  //     items: items
-  //         .map(
-  //           (e) => DropdownMenuItem(
-  //             value: e,
-  //             child: Text(e, style: const TextStyle(fontSize: 13)),
-  //           ),
-  //         )
-  //         .toList(),
-  //     onChanged: onChanged,
-  //   );
-  // }
+  Widget _buildFilterDropdown(
+    String label,
+    String value,
+    List<String> items,
+    Function(String?) onChanged,
+  ) {
+    return DropdownButtonFormField<String>(
+      value: value,
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(fontSize: 12, color: Color(0xFF64748B)),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+        ),
+      ),
+      items: items
+          .map(
+            (e) => DropdownMenuItem(
+              value: e,
+              child: Text(e, style: const TextStyle(fontSize: 13)),
+            ),
+          )
+          .toList(),
+      onChanged: onChanged,
+    );
+  }
 }
