@@ -7,8 +7,12 @@ import 'favorite_artwork_screen.dart';
 import 'add_artwork_screen.dart';
 import 'artwork_detail_screen.dart';
 import 'login_screen.dart';
+import 'profile_screen.dart';
 
+// ==========================================================================
+// SCREEN: HOME SCREEN
 // Task 5 – Home Screen (Artwork List)
+// ==========================================================================
 /// Main Dashboard screen displaying a summary of the gallery.
 /// Includes banners, statistics, search/filter functionality, and the artwork list.
 class HomeScreen extends StatefulWidget {
@@ -19,11 +23,15 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // Local state for current filter selections
+  // --------------------------------------------------------------------------
+  // 1. STATE VARIABLES
+  // --------------------------------------------------------------------------
   String selectedCategory = "All";
   String selectedYear = "All";
 
-  @override
+  // --------------------------------------------------------------------------
+  // 2. INITIALIZATION
+  // --------------------------------------------------------------------------
   void initState() {
     super.initState();
     // Load initial data from SQLite via Providers after the first frame is rendered
@@ -34,6 +42,9 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  // --------------------------------------------------------------------------
+  // 3. CORE FUNCTIONAL ACTIONS
+  // --------------------------------------------------------------------------
   // Task 4 – Logout (Action): Clears the user session and navigates back to the LoginScreen.
   void logout() async {
     await context.read<AuthProvider>().logout();
@@ -72,11 +83,22 @@ class _HomeScreenState extends State<HomeScreen> {
     final favoriteProvider = context.watch<FavoriteProvider>();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF1F5F9), // Slate-light background
+      backgroundColor: const Color(0xFFF1F5F9), 
+      // ----------------------------------------------------------------------
+      // SECTION: APP BAR (HEADER)
+      // Contains: Profile Icon (Task 15), Title, Favorites, Logout (Task 4)
+      // ----------------------------------------------------------------------
       appBar: AppBar(
         title: const Text("Gallery Dashboard", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         backgroundColor: Colors.white,
         elevation: 0,
+        // Task 15 – User Profile (Navigation): Added profile icon to the leading part of the header
+        leading: IconButton(
+          icon: const Icon(Icons.person_outline_rounded, color: Color(0xFF64748B)),
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const ProfileScreen()));
+          },
+        ),
         actions: [
           // Navigation to the Favorites sub-screen
           IconButton(
@@ -92,6 +114,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
+      // ----------------------------------------------------------------------
+      // SECTION: BODY (SCROLLABLE CONTENT)
+      // ----------------------------------------------------------------------
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -262,11 +287,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     },
                   ),
-            const SizedBox(height: 100), // Ensures scroll space for the FloatingActionButton
+            const SizedBox(height: 100), 
           ],
         ),
       ),
-      // Action button to navigate to the 'Add Artwork' form
+      // ----------------------------------------------------------------------
+      // SECTION: FLOATING ACTION BUTTON
+      // Task 6 – Add Artwork: Navigates to the input form
+      // ----------------------------------------------------------------------
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: const Color(0xFFA7F3D0),
         foregroundColor: const Color(0xFF065F46),
@@ -280,6 +308,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // --------------------------------------------------------------------------
+  // 4. REUSABLE HELPER UI COMPONENTS
+  // --------------------------------------------------------------------------
   /// Reusable widget for displaying a single statistics metric.
   Widget _statCard(IconData icon, String value, String label) {
     return Expanded(

@@ -47,4 +47,11 @@ class AuthService {
 
     return null; // Authentication failed
   }
+
+  // Task 15 – User Profile (Internal): Fetches full user information by primary key ID.
+  Future<User?> getUser(int id) async {
+    final db = await dbHelper.database;
+    var result = await db.query('users', where: 'id = ?', whereArgs: [id]);
+    return result.isNotEmpty ? User.fromMap(result.first) : null;
+  }
 }

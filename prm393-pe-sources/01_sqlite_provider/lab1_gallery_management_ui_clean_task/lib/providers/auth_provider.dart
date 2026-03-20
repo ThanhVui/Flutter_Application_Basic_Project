@@ -55,4 +55,10 @@ class AuthProvider extends ChangeNotifier {
     _username = null; 
     notifyListeners(); // Navigate user back to LoginScreen
   }
+
+  // Task 15 – User Profile: Fetches the complete profile information for the current user.
+  Future<User?> getUserProfile() async {
+    if (_userId == null) return null;
+    return await _authService.getUser(_userId!);
+  }
 }
