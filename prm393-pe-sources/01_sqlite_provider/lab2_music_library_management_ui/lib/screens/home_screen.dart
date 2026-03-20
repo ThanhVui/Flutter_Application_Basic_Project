@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-// import '../providers/song_provider.dart';
 import '../providers/auth_provider.dart';
 import '../providers/song_provider.dart';
-// import 'favorite_song_screen.dart';
+import 'favorite_song_screen.dart';
 import 'add_song_screen.dart';
 import 'song_detail_screen.dart';
 import 'login_screen.dart';
@@ -89,19 +88,19 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         actions: [
-          // // Navigation to the Favorites sub-screen
-          // IconButton(
-          //   icon: const Icon(
-          //     Icons.favorite_border_rounded,
-          //     color: Color(0xFF64748B),
-          //   ),
-          //   onPressed: () {
-          //     Navigator.push(
-          //       context,
-          //       MaterialPageRoute(builder: (_) => const FavoriteScreen()),
-          //     );
-          //   },
-          // ),
+          // // Task: Favorite Icon: Navigation to the Favorites sub-screen
+          IconButton(
+            icon: const Icon(
+              Icons.favorite_border_rounded,
+              color: Color(0xFF64748B),
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const FavoriteScreen()),
+              );
+            },
+          ),
 
           // 1.1 LOGOUT FUNCTIONALITY
           IconButton(

@@ -16,13 +16,11 @@ class SongProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   int get totalSongs => _songs.length;
 
-  /// Fetches all songs from the database for a specific user.
-  /// Notifies listeners to show/hide loading indicators during the process.
+  /// Fetches all songs from the database.
   Future<void> loadSongs() async {
     _isLoading = true;
     notifyListeners();
 
-    // Fetch data asynchronously from SQLite
     _songs = await _service.getSongs();
 
     _isLoading = false;
@@ -30,10 +28,8 @@ class SongProvider extends ChangeNotifier {
   }
 
   /// Adds a new song to the database.
-  /// After adding, it automatically refreshes the local list to keep the UI in sync.
   Future<void> addSong(Song song) async {
     await _service.insertSong(song);
-    // Refresh the list for the user who created it
     await loadSongs();
   }
 

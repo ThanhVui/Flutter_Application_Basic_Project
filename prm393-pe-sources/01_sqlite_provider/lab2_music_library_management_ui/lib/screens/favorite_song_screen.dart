@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/favorite_provider.dart';
-import '../providers/auth_provider.dart';
+import '../providers/song_provider.dart';
+import '../models/song.dart';
 
-/// Screen displaying the list of artworks marked as favorites by the current user.
+/// Screen displaying the list of songs marked as favorites (isFavorite == 1).
 class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({super.key});
 
@@ -15,49 +16,64 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   @override
   void initState() {
     super.initState();
-    // Ensure favorite data is fresh by loading it from SQLite when the screen opens
+    // Load favorite-only data from the dedicated FavoriteProvider
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final userId = context.read<AuthProvider>().userId!;
-      context.read<FavoriteProvider>().loadFavorites(userId);
+      context.read<FavoriteProvider>().loadFavorites();
     });
   }
 
-  /// Removes an artwork from the user's favorite list.
-  void remove(int artworkId) async {
-    final userId = context.read<AuthProvider>().userId!;
-    // toggleFavorite handles both adding and removing based on current state
-    await context.read<FavoriteProvider>().toggleFavorite(userId, artworkId);
+  /// Toggles the favorite status of a song.
+  void toggleFav(Song song) async {
+    final songProvider = context.read<SongProvider>();
+    await context.read<FavoriteProvider>().toggleFavorite(song, songProvider);
 
     if (mounted) {
-      // Provide quick feedback to the user
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("Removed from favorites")));
+      // Provide visual feedback
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            song.isFavorite == 1 ? "Added to favorites" : "Removed from favorites",
+          ),
+          duration: const Duration(seconds: 1),
+        ),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // Watch favorite provider for real-time list updates
-    final favoriteProvider = context.watch<FavoriteProvider>();
+    // Watch FavoriteProvider specifically for real-time list updates
+    final favProvider = context.watch<FavoriteProvider>();
+    final favorites = favProvider.favorites;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Favorites")),
-      body: favoriteProvider.favorites.isEmpty
-          ? const Center(child: Text("No favorites yet")) // Empty state message
+      appBar: AppBar(
+        title: const Text("Favorite Songs"),
+        backgroundColor: const Color(0xFF00796B),
+        foregroundColor: Colors.white,
+      ),
+      body: favorites.isEmpty
+          ? const Center(
+              child: Text(
+                "No favorite songs yet.",
+                style: TextStyle(color: Color(0xFF64748B), fontSize: 16),
+              ),
+            )
           : ListView.builder(
-              itemCount: favoriteProvider.favorites.length,
+              itemCount: favorites.length,
+              padding: const EdgeInsets.symmetric(vertical: 8),
               itemBuilder: (_, i) {
-                var art = favoriteProvider.favorites[i];
-                // Display each favorite artwork as a ListTile
+                var song = favorites[i];
                 return ListTile(
                   leading: const Icon(Icons.favorite, color: Colors.red),
-                  title: Text(art.title),
-                  subtitle: Text("${art.artist} • ${art.year}"),
+                  title: Text(
+                    song.title,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text("${song.artist} • ${song.year}"),
                   trailing: IconButton(
-                    icon: const Icon(Icons.delete_outline, color: Colors.grey),
-                    // Action to unmark as favorite
-                    onPressed: () => remove(art.id!),
+                    icon: const Icon(Icons.favorite, color: Colors.red),
+                    onPressed: () => toggleFav(song),
                   ),
                 );
               },

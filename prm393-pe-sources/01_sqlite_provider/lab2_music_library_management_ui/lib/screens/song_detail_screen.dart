@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/song.dart';
 import '../providers/song_provider.dart';
-// import '../providers/favorite_provider.dart';
+import '../providers/favorite_provider.dart';
 import '../providers/auth_provider.dart';
 import 'edit_song_screen.dart';
 
@@ -35,50 +35,50 @@ class DetailScreen extends StatelessWidget {
         child: Column(
           children: [
             // 1. HEADER BANNER SECTION: Displays Title, Artist Initial, and Quick Labels
-            // Container(
-            //   width: double.infinity,
-            //   padding: const EdgeInsets.all(24),
-            //   decoration: BoxDecoration(
-            //     color: const Color(0xFF0D6E6E), // Dark Teal Background
-            //     borderRadius: BorderRadius.circular(24),
-            //   ),
-            //   child: Column(
-            //     crossAxisAlignment: CrossAxisAlignment.start,
-            //     children: [
-            //       Text(
-            //         song.title,
-            //         style: const TextStyle(
-            //           color: Colors.white,
-            //           fontSize: 32,
-            //           fontWeight: FontWeight.bold,
-            //         ),
-            //       ),
-            //       const SizedBox(height: 16),
-            //       Row(
-            //         children: [
-            //           CircleAvatar(
-            //             radius: 18,
-            //             backgroundColor: Colors.white.withOpacity(0.2),
-            //             child: Text(
-            //               song.artist.isNotEmpty
-            //                   ? song.artist[0].toUpperCase()
-            //                   : "?",
-            //               style: const TextStyle(
-            //                 color: Colors.white,
-            //                 fontWeight: FontWeight.bold,
-            //               ),
-            //             ),
-            //           ),
-            //           const SizedBox(width: 10),
-            //           _buildHeaderChip(song.year),
-            //           const SizedBox(width: 10),
-            //           _buildHeaderChip(song.category),
-            //         ],
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            // const SizedBox(height: 24),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: const Color(0xFF00796B), // Teal theme
+                borderRadius: BorderRadius.circular(24),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    song.title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 18,
+                        backgroundColor: Colors.white.withOpacity(0.2),
+                        child: Text(
+                          song.artist.isNotEmpty
+                              ? song.artist[0].toUpperCase()
+                              : "?",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      _buildHeaderChip(song.year),
+                      const SizedBox(width: 10),
+                      _buildHeaderChip(song.genre),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
 
             // 2. INFORMATION CARD: Detailed metadata grid and description text
             Container(
@@ -158,44 +158,46 @@ class DetailScreen extends StatelessWidget {
             ),
             const SizedBox(height: 12),
 
-            // Task: FAVORITE TOGGLE: Reactively checks if the current user has liked this song
-            // FutureBuilder<bool>(
-            //   future: favoriteProvider.checkFavorite(
-            //     authProvider.userId!,
-            //     song.id!,
-            //   ),
-            //   builder: (context, snapshot) {
-            //     bool isFav = snapshot.data ?? false;
-            //     return _actionButton(
-            //       label: isFav ? "Remove from Favorite" : "Add to Favorite",
-            //       icon: isFav
-            //           ? Icons.favorite_rounded
-            //           : Icons.favorite_border_rounded,
-            //       color: const Color(0xFF0D6E6E),
-            //       textColor: Colors.white,
-            //       onPressed: () async {
-            //         // Update favorite status in SQLite via FavoriteProvider
-            //         await favoriteProvider.toggleFavorite(
-            //           authProvider.userId!,
-            //           song.id!,
-            //         );
-            //         if (context.mounted) {
-            //           ScaffoldMessenger.of(context).showSnackBar(
-            //             SnackBar(
-            //               content: Text(
-            //                 isFav
-            //                     ? "Removed from favorites"
-            //                     : "Added to favorites",
-            //               ),
-            //               duration: const Duration(seconds: 1),
-            //             ),
-            //           );
-            //         }
-            //       },
-            //     );
-            //   },
-            // ),
-            // const SizedBox(height: 40),
+            // FAVORITE TOGGLE: Reactively updates the icon based on the song's favorite status
+            Consumer<FavoriteProvider>(
+              builder: (context, favProvider, child) {
+                // Rely on SongProvider for the most up-to-date data for the item itself
+                final songProvider = context.read<SongProvider>();
+                final currentSong = songProvider.songs.firstWhere(
+                  (s) => s.id == song.id,
+                  orElse: () => song,
+                );
+
+                bool isFav = currentSong.isFavorite == 1;
+
+                return _actionButton(
+                  label: isFav ? "Remove from Favorite" : "Add to Favorite",
+                  icon: isFav
+                      ? Icons.favorite_rounded
+                      : Icons.favorite_border_rounded,
+                  color: const Color(0xFF00796B),
+                  textColor: Colors.white,
+                  onPressed: () async {
+                    // Toggles favorite (isFavorite: 0/1) in SQLite using a dedicated provider
+                    await favProvider.toggleFavorite(currentSong, songProvider);
+
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            currentSong.isFavorite == 1
+                                ? "Added to favorites"
+                                : "Removed from favorites",
+                          ),
+                          duration: const Duration(seconds: 1),
+                        ),
+                      );
+                    }
+                  },
+                );
+              },
+            ),
+            const SizedBox(height: 40),
           ],
         ),
       ),
