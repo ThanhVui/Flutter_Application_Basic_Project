@@ -87,4 +87,25 @@ class ArtworkProvider extends ChangeNotifier {
 
     notifyListeners(); // Refresh the list view in the UI
   }
+
+  // Task 16 – Sorting Artworks: Sorts the CURRENT visible artworks locally.
+  /// Supports both [ascending] and descending order for [criteria] (Year or Title).
+  void sortArtworks(String criteria, bool ascending) {
+    if (criteria == "Year") {
+      // Sort by numerical Year
+      _artworks.sort((a, b) {
+        int valA = int.tryParse(a.year) ?? 0;
+        int valB = int.tryParse(b.year) ?? 0;
+        return ascending ? valA.compareTo(valB) : valB.compareTo(valA);
+      });
+    } else if (criteria == "Title") {
+      // Sort by Title alphabetically (case-insensitive)
+      _artworks.sort((a, b) {
+        int res = a.title.toLowerCase().compareTo(b.title.toLowerCase());
+        return ascending ? res : -res;
+      });
+    }
+    
+    notifyListeners();
+  }
 }

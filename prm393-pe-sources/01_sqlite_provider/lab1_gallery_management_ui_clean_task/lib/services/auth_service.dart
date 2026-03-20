@@ -54,4 +54,15 @@ class AuthService {
     var result = await db.query('users', where: 'id = ?', whereArgs: [id]);
     return result.isNotEmpty ? User.fromMap(result.first) : null;
   }
+
+  // Task 15 – User Profile (Update): Updates existing user information in SQLite.
+  Future<void> updateUser(User user) async {
+    final db = await dbHelper.database;
+    await db.update(
+      'users',
+      user.toMap(),
+      where: 'id = ?',
+      whereArgs: [user.id],
+    );
+  }
 }

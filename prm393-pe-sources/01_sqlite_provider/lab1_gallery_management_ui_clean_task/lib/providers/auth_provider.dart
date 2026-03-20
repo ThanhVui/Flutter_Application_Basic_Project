@@ -61,4 +61,15 @@ class AuthProvider extends ChangeNotifier {
     if (_userId == null) return null;
     return await _authService.getUser(_userId!);
   }
+
+  // Task 15 – User Profile (Update): Updates user data in SQLite and refreshes the local session state.
+  Future<void> updateProfile(User updatedUser) async {
+    await _authService.updateUser(updatedUser);
+    
+    // Refresh internal state and persistence (SessionManager)
+    _username = updatedUser.username;
+    await SessionManager.saveUser(_userId!, _username!);
+    
+    notifyListeners();
+  }
 }

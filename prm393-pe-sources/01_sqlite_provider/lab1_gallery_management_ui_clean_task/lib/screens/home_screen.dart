@@ -28,6 +28,8 @@ class _HomeScreenState extends State<HomeScreen> {
   // --------------------------------------------------------------------------
   String selectedCategory = "All";
   String selectedYear = "All";
+  // Task 16: Track which sort is currently active for UI feedback
+  String selectedSortOrder = "A-Z";
 
   // --------------------------------------------------------------------------
   // 2. INITIALIZATION
@@ -232,6 +234,33 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     ),
+                    const SizedBox(height: 16),
+                    // Task 16 – Sorting Buttons: Allows users to sort the list by Year or Title
+                    // Task 16 – Sorting Section: Reorganized for more explicit sorting options
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("Sort by Title:", style: TextStyle(fontSize: 13, color: Color(0xFF64748B), fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            _buildSortChip("A-Z", artworkProvider, "Title", true),
+                            const SizedBox(width: 8),
+                            _buildSortChip("Z-A", artworkProvider, "Title", false),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        const Text("Sort by Year:", style: TextStyle(fontSize: 13, color: Color(0xFF64748B), fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            _buildSortChip("Oldest", artworkProvider, "Year", true),
+                            const SizedBox(width: 8),
+                            _buildSortChip("Newest", artworkProvider, "Year", false),
+                          ],
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -345,6 +374,27 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       items: items.map((e) => DropdownMenuItem(value: e, child: Text(e, style: const TextStyle(fontSize: 13)))).toList(),
       onChanged: onChanged,
+    );
+  }
+
+  /// Task 16 – Sorting Chip: Updated to handle explicit criteria and order with active state
+  Widget _buildSortChip(String label, ArtworkProvider provider, String criteria, bool asc) {
+    final isSelected = selectedSortOrder == label;
+    return ActionChip(
+      label: Text(label, style: TextStyle(
+        fontSize: 12, 
+        color: isSelected ? Colors.white : const Color(0xFF64748B),
+        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+      )),
+      backgroundColor: isSelected ? const Color(0xFF148585) : const Color(0xFFF1F5F9),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      side: BorderSide.none,
+      onPressed: () {
+        setState(() => selectedSortOrder = label);
+        provider.sortArtworks(criteria, asc);
+      },
+      elevation: 0,
+      pressElevation: 2,
     );
   }
 }

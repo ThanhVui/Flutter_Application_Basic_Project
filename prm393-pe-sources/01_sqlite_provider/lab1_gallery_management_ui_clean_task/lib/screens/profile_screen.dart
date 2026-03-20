@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import '../models/user.dart';
+import 'edit_profile_screen.dart';
 
 // Task 15 – User Profile
 /// Screen to display detailed information about the logged-in user.
@@ -20,6 +21,22 @@ class ProfileScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
+        actions: [
+          // Task 15 – User Profile (Edit Action): Button to open the update form
+          IconButton(
+            icon: const Icon(Icons.edit_outlined, color: Color(0xFF1E293B)),
+            onPressed: () async {
+              final user = await authProvider.getUserProfile();
+              if (user != null && context.mounted) {
+                // Task 15 – Navigation: Moving the update logic from a Dialog to a dedicated Screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => EditProfileScreen(user: user)),
+                ).then((_) => (context as Element).markNeedsBuild()); // Ensure screen refreshes on return
+              }
+            },
+          ),
+        ],
       ),
       body: FutureBuilder<User?>(
         // Task 15: Fetch full profile data from SQLite
