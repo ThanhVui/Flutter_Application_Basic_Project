@@ -6,22 +6,14 @@ import '../models/song.dart';
 class FavoriteService {
   final dbHelper = DBHelper();
 
-  /// Retrieves all songs that have been marked as favorites (isFavorite = 1).
+  /// Task 12: Favorite Songs Screen - Retrieves all songs that have been marked as favorites (isFavorite = 1).
   Future<List<Song>> getFavorites() async {
     final db = await dbHelper.database;
-
-    // final result = await db.rawQuery('''
-    //   SELECT songs.* FROM songs
-    //   INNER JOIN favorites
-    //   ON songs.id = favorites.songId
-    // ''');
     final result = await db.query('songs', where: 'isFavorite = 1');
-
-    // Map query results into Song model objects
     return result.map((e) => Song.fromMap(e)).toList();
   }
 
-  /// Calculates the total number of favorite songs.
+  /// Task 12: Favorite Songs Screen - Calculates the total number of favorite songs.
   Future<int> countFavorites() async {
     final db = await dbHelper.database;
     var result = await db.rawQuery(
@@ -30,12 +22,13 @@ class FavoriteService {
     return result.first['count'] as int;
   }
 
-  /// Toggles the favorite status (0 <-> 1) for a song in the main songs table.
+  /// Task 11: Favorite Songs - Toggles the favorite status (0 <-> 1) for a song in the main songs table.
   Future<int> toggleFavorite(Song song) async {
     final db = await dbHelper.database;
     int newValue = song.isFavorite == 1 ? 0 : 1;
-    song.isFavorite = newValue; // Correct: Update the object in memory too
+    song.isFavorite = newValue; 
 
+    // Task 11: Favorite Songs - Update only the isFavorite column
     return await db.update(
       'songs',
       {'isFavorite': newValue},

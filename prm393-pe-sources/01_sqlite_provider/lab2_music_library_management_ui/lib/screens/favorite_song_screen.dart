@@ -42,7 +42,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Watch FavoriteProvider specifically for real-time list updates
+    // Task 12: Favorite Songs Screen - Watch FavoriteProvider for favorited songs (isFavorite = 1)
     final favProvider = context.watch<FavoriteProvider>();
     final favorites = favProvider.favorites;
 
@@ -64,6 +64,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
               padding: const EdgeInsets.symmetric(vertical: 8),
               itemBuilder: (_, i) {
                 var song = favorites[i];
+                // Task 12: Favorite Songs Screen - Display list and allow removal
                 return ListTile(
                   leading: const Icon(Icons.favorite, color: Colors.red),
                   title: Text(

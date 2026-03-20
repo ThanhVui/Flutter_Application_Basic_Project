@@ -20,23 +20,23 @@ class _LoginScreenState extends State<LoginScreen> {
   final usernameCtrl = TextEditingController();
   final passwordCtrl = TextEditingController();
 
-  /// Logic to execute when the 'Login' button is pressed.
+  /// Task 1: Login Functionality - Logic to execute when the 'Login' button is pressed.
   void login() async {
-    // 1. Validate form fields first (Check for empty fields)
+    // Task 1: Login - Validate input fields
     if (!_formKey.currentState!.validate()) return;
 
     final authProvider = context.read<AuthProvider>();
 
-    // 2. Call the AuthProvider to verify credentials against the SQLite database
+    // Task 1: Login - Compare check (Compare directly in AuthProvider logic)
     String? error = await authProvider.login(
       usernameCtrl.text.trim(),
       passwordCtrl.text,
     );
 
-    // 3. Handle the result of the login attempt
+    // Task 1: Login - Handle success/failure
     if (error == null) {
       if (mounted) {
-        // Success: Provide feedback and navigate
+        // Success: Navigate to Home and Save Session
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Login successful! Welcome back."),
@@ -44,7 +44,6 @@ class _LoginScreenState extends State<LoginScreen> {
             duration: Duration(seconds: 1),
           ),
         );
-        // Navigation to HomeScreen and remove LoginScreen from navigation stack
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => const HomeScreen()),
@@ -52,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } else {
       if (mounted) {
-        // Failure: Display the error message provided by AuthProvider using SnackBar
+        // Task 1: Login - Failure message: Invalid username or password
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(error), backgroundColor: Colors.red),
         );

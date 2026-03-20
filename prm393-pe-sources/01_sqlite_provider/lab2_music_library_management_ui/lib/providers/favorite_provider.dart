@@ -16,40 +16,14 @@ class FavoriteProvider extends ChangeNotifier {
   List<Song> get favorites => _favorites;
   int get totalFavorites => _totalFavorites;
 
-  /// Loads favorite songs and their total count from SQLite.
+  /// Task 12: Favorite Songs Screen - Loads favorite songs and their total count from SQLite.
   /// Typically called from navigation headers and FavoriteScreen.
   Future<void> loadFavorites() async {
     _favorites = await _service.getFavorites();
     _totalFavorites = await _service.countFavorites();
-    notifyListeners(); // Refresh UI for icons and badges
+    notifyListeners();
   }
-
-  //   /// Toggles the favorite status of an artwork for a specific user ID.
-  // /// If [isFav] is true, it removes the favorite; otherwise, it adds it.
-  // Future<void> toggleFavorite(int userId, int artworkId) async {
-  //   bool isFav = await _service.isFavorite(userId, artworkId);
-  //   if (isFav) {
-  //     await _service.removeFavorite(userId, artworkId);
-  //   } else {
-  //     // Create a new Favorite object and insert it into the database
-  //     await _service.addFavorite(
-  //       Favorite(
-  //         userId: userId,
-  //         artworkId: artworkId,
-  //         createdAt: DateTime.now().toString(),
-  //       ),
-  //     );
-  //   }
-  //   // Refresh the local list and count so UI is updated automatically
-  //   await loadFavorites(userId);
-  // }
-
-  // /// Checks if a specific artwork is favorited by a user.
-  // /// Typically called to determine the color of the favorite heart icon in UI/UX.
-  // Future<bool> checkFavorite(int userId, int artworkId) async {
-  //   return await _service.isFavorite(userId, artworkId);
-
-  /// Toggles the favorite status (isFavorite: 0/1) for a specific song ID.
+  /// Task 11: Favorite Songs - Toggles the favorite status (isFavorite: 0/1) for a specific song ID.
   /// Also reloads favorite and song list to keep UI in sync.
   Future<void> toggleFavorite(Song song, SongProvider songProvider) async {
     await _service.toggleFavorite(song);

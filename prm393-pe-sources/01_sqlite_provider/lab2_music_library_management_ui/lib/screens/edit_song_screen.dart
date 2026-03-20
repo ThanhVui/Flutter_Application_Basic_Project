@@ -44,30 +44,28 @@ class _EditScreenState extends State<EditScreen> {
     // descCtrl = TextEditingController(text: widget.song.description);
   }
 
-  /// Collects updated data, validates fields, and sends update request to SQLite.
+  /// Task 7: Update Song - Collects updated data, validates fields, and sends update request to SQLite.
   void update() async {
-    // 1. Validate fields (Required fields and number formats)
+    // Task 7: Update Song - Validate input fields
     if (!_formKey.currentState!.validate()) return;
 
     final provider = context.read<SongProvider>();
 
-    // 2. Build a new Song object with updated values while keeping the original ID
+    // Task 7: Update Song - Build updated Song object (Modify any field)
     Song updatedSong = Song(
       id: widget.song.id,
       title: titleCtrl.text.trim(),
       artist: artistCtrl.text.trim(),
       year: yearCtrl.text.trim(),
-      // category: selectedCategory,
       genre: genreCtrl.text.trim(),
-      // createdBy: widget.song.createdBy, // Keep original creator reference
-      isFavorite: widget.song.isFavorite, // Keep original creator reference
+      isFavorite: widget.song.isFavorite, // Keep original favorite status
     );
 
-    // 3. Request provider to update the entry in the database
+    // Task 7: Update Song - Save to database and Update immediately
     await provider.updateSong(updatedSong);
 
     if (mounted) {
-      // 4. Notify user and navigate back to the dashboard/detail view
+      // Task 7: Update Song - Update UI and return
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Song updated successfully!"),

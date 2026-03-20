@@ -16,64 +16,57 @@ class SongProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   int get totalSongs => _songs.length;
 
-  /// Fetches all songs from the database.
+  /// Task 4: Home Screen (Song List) - Fetches all songs from the database.
   Future<void> loadSongs() async {
     _isLoading = true;
     notifyListeners();
 
-    _songs = await _service.getSongs();
+    _songs = await _service.getSongs(); // Task 4: Load data from database
 
     _isLoading = false;
     notifyListeners();
   }
 
-  /// Adds a new song to the database.
+  /// Task 5: Add Song - Adds a new song to the database.
   Future<void> addSong(Song song) async {
-    await _service.insertSong(song);
-    await loadSongs();
+    await _service.insertSong(song); // Task 5: Save to database
+    await loadSongs(); // Task 5: Update song list
   }
 
-  /// Updates an existing song's details.
-  /// Re-fetches the database content upon successful modification.
+  /// Task 7: Update Song - Updates an existing song's details.
   Future<void> updateSong(Song song) async {
-    await _service.updateSong(song);
-    await loadSongs();
+    await _service.updateSong(song); // Task 7: Save to database
+    await loadSongs(); // Task 7: Update immediately on Home Screen
   }
 
-  /// Deletes an song from the database using its unique [id].
-  /// Requires [userId] to refresh the correct user's collection list.
+  /// Task 8: Delete Song - Deletes a song from the database.
   Future<void> deleteSong(int id) async {
-    await _service.deleteSong(id);
-    await loadSongs();
+    await _service.deleteSong(id); // Task 8: Remove from database
+    await loadSongs(); // Task 8: Update list
   }
 
-  /// Searches songs by title keyword for a specific user.
-  /// Updates the [_songs] list reactively as the user types in the search bar.
+  /// Task 9: Search Songs - Searches songs by Title or Artist.
   Future<void> search(String keyword) async {
-    _songs = await _service.searchSongs(keyword);
+    _songs = await _service.searchSongs(keyword); // Task 9: Filter results in real-time
     notifyListeners();
   }
 
-  /// Filters songs based on category and creation year.
-  /// Logic: Fetches all songs then applies filters locally for better performance.
+  /// Task 10: Filter Songs - Filters songs by Genre and Year.
   void filter(String genre, String year) async {
-    // 1. Get a fresh copy of all user songs
+    // 1. Get a fresh copy of all songs
     List<Song> all = await _service.getSongs();
 
-    // 2. Apply filtering logic on the collection
+    // 2. Task 10: Filter logic for Genre and Year (Current, Last 5 years, All)
     _songs = all.where((e) {
-      // Genre filter: match if "All" is selected or if specific category matches
       bool genreMatch = genre == "All" || e.genre == genre;
 
-      // Year filter: match if "All" is selected or if song was created in last 5 years
       bool yearMatch = year == "All";
+      int current = DateTime.now().year;
+      int? songYear = int.tryParse(e.year);
+
       if (year == "Last 5 years") {
-        int current = DateTime.now().year;
-        int? songYear = int.tryParse(e.year);
         yearMatch = songYear != null && (current - songYear <= 5);
-      } else if (year == "currentYear") {
-        int current = DateTime.now().year;
-        int? songYear = int.tryParse(e.year);
+      } else if (year == "Current year") {
         yearMatch = songYear != null && (current - songYear == 0);
       }
 

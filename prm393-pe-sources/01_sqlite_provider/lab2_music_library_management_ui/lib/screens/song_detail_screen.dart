@@ -8,6 +8,7 @@ import 'edit_song_screen.dart';
 
 /// Screen displaying full details of a specific song.
 /// Provides options to Edit, Delete, or Toggle Favorite status.
+/// Task 6: Song Detail - Screen displaying full details of a specific song.
 class DetailScreen extends StatelessWidget {
   final Song song;
   const DetailScreen({super.key, required this.song});
@@ -80,7 +81,7 @@ class DetailScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
 
-            // 2. INFORMATION CARD: Detailed metadata grid and description text
+            // Task 6: Song Detail - Display Title, Artist, Year, Genre
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(24),
@@ -106,25 +107,6 @@ class DetailScreen extends StatelessWidget {
                   const SizedBox(height: 12),
                   _infoGridRow("Genre:", song.genre),
                   const Divider(height: 40),
-                  // const Text(
-                  //   "Description",
-                  //   style: TextStyle(
-                  //     fontSize: 18,
-                  //     fontWeight: FontWeight.bold,
-                  //     color: Color(0xFF1E293B),
-                  //   ),
-                  // ),
-                  // const SizedBox(height: 12),
-                  // Text(
-                  //   song.description.isNotEmpty
-                  //       ? song.description
-                  //       : "No description provided.",
-                  //   style: const TextStyle(
-                  //     fontSize: 15,
-                  //     color: Color(0xFF64748B),
-                  //     height: 1.5,
-                  //   ),
-                  // ),
                 ],
               ),
             ),
@@ -147,7 +129,7 @@ class DetailScreen extends StatelessWidget {
             ),
             const SizedBox(height: 12),
 
-            // Open Delete Confirmation Dialog
+            // Task 8: Delete Song - Open Delete Confirmation Dialog
             _actionButton(
               label: "Delete Song",
               icon: Icons.delete_outline_rounded,
@@ -158,7 +140,7 @@ class DetailScreen extends StatelessWidget {
             ),
             const SizedBox(height: 12),
 
-            // FAVORITE TOGGLE: Reactively updates the icon based on the song's favorite status
+            // Task 11: Favorite Songs - Toggle Favorite feature
             Consumer<FavoriteProvider>(
               builder: (context, favProvider, child) {
                 // Rely on SongProvider for the most up-to-date data for the item itself
@@ -178,7 +160,7 @@ class DetailScreen extends StatelessWidget {
                   color: const Color(0xFF00796B),
                   textColor: Colors.white,
                   onPressed: () async {
-                    // Toggles favorite (isFavorite: 0/1) in SQLite using a dedicated provider
+                    // Task 11: Favorite Songs - Update isFavorite field (0/1)
                     await favProvider.toggleFavorite(currentSong, songProvider);
 
                     if (context.mounted) {
@@ -309,7 +291,7 @@ class DetailScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               const SizedBox(height: 32),
-              // Horizontal arrangement of action buttons for a balanced look
+              // Task 8: Delete Song - Confirmation Logic
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -328,9 +310,10 @@ class DetailScreen extends StatelessWidget {
                     height: 48,
                     child: ElevatedButton(
                       onPressed: () async {
-                        // Permanent deletion from database
+                        // Task 8: Delete Song - Remove from database and update list
                         await provider.deleteSong(song.id!);
                         if (context.mounted) {
+                          // Task 8: Delete Song - Show SnackBar notification
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text("Song deleted successfully"),

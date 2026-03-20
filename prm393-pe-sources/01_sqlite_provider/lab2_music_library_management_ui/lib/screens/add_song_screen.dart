@@ -32,14 +32,14 @@ class _AddSongScreenState extends State<AddSongScreen> {
     "Portrait",
   ];
 
-  /// Gathers input data, validates it, and saves a new Song to SQLite.
+  /// Task 5: Add Song - Gathers input data, validates it, and saves a new Song to SQLite.
   void save() async {
-    // 1. Run native Flutter field validators
+    // Task 5: Add Song - Validate input fields
     if (!_formKey.currentState!.validate()) return;
 
     final songProvider = context.read<SongProvider>();
 
-    // 2. Map text field values to a new Song model instance
+    // Task 5: Add Song - Map details to model, isFavorite = 0 by default
     Song song = Song(
       title: titleCtrl.text.trim(),
       artist: artistCtrl.text.trim(),
@@ -48,11 +48,11 @@ class _AddSongScreenState extends State<AddSongScreen> {
       isFavorite: 0,
     );
 
-    // 3. Persist the new song using the provider
+    // Task 5: Add Song - Save to database via Provider
     await songProvider.addSong(song);
 
     if (mounted) {
-      // 4. Provide visual feedback and return to previous screen
+      // Task 5: Add Song - Return to Home and show feedback
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Song added successfully!"),

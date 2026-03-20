@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import '../providers/song_provider.dart';
+import '../providers/favorite_provider.dart';
+import '../models/song.dart';
 import 'favorite_song_screen.dart';
 import 'add_song_screen.dart';
+import 'edit_song_screen.dart';
 import 'song_detail_screen.dart';
 import 'login_screen.dart';
 
@@ -31,10 +34,11 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  /// Clears the user session and navigates back to the LoginScreen.
+  /// Task 3: Logout - Clears the user session and navigates back to the LoginScreen.
   void logout() async {
     await context.read<AuthProvider>().logout();
     if (mounted) {
+      // Task 3: Logout - Show confirmation message
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Logged out successfully"),
@@ -48,15 +52,13 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  // /// Triggers a live search based on the user's keystrokes.
+  // Task 9: Search Songs - Triggers a live search based on the user's keystrokes.
   void search(String keyword) {
-    // final userId = context.read<AuthProvider>().userId!;
     context.read<SongProvider>().search(keyword);
   }
 
-  // /// Applies the selected Category and Year filters to the song list.
+  // Task 10: Filter Songs - Applies the selected Category and Year filters to the song list.
   void applyFilter() {
-    // final userId = context.read<AuthProvider>().userId!;
     context.read<SongProvider>().filter(selectedCategory, selectedYear);
   }
 
@@ -72,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // Watching providers to reactively update the UI when data changes
     final authProvider = context.watch<AuthProvider>();
     final songProvider = context.watch<SongProvider>();
-    // final favoriteProvider = context.watch<FavoriteProvider>();
+    final favoriteProvider = context.watch<FavoriteProvider>();
 
     return Scaffold(
       backgroundColor: const Color(0xFFF1F5F9), // Slate-light background
@@ -84,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         actions: [
-          // // Task: Favorite Icon: Navigation to the Favorites sub-screen
+          // Task 12: Favorite Songs Screen - Navigation to the Favorites sub-screen
           IconButton(
             icon: const Icon(
               Icons.favorite_border_rounded,
@@ -98,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
 
-          // 1.1 LOGOUT FUNCTIONALITY
+          // Task 3: Logout - Logout button on App Bar
           IconButton(
             icon: const Icon(Icons.logout_rounded, color: Color(0xFF64748B)),
             onPressed: logout,
@@ -221,11 +223,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 child: Column(
                   children: [
-                    // Dynamic Search Input
+                    // Task 9: Search Songs - Add a Search Bar on Home Screen
                     TextField(
-                      onChanged: search,
+                      onChanged: search, // Logic for real-time search
                       decoration: InputDecoration(
-                        hintText: "Search by title...",
+                        hintText: "Search by title or artist...",
                         prefixIcon: const Icon(
                           Icons.search,
                           color: Color(0xFF64748B),
@@ -247,13 +249,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    // Task: Filter ===================
-                    // Dropdown filters for Year and Category
+                    // Task 10: Filter Songs - Allow filtering by Genre and Year
                     Row(
                       children: [
                         Expanded(
                           child: _buildFilterDropdown(
-                            "Year filter",
+                            "Year Filter", // Filter by Year: Current, Last 5 years, All
                             selectedYear,
                             ["All", "Last 5 years", "Current year"],
                             (v) {
@@ -265,7 +266,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: _buildFilterDropdown(
-                            "Category",
+                            "Genre Filter", // Filter by Genre (Pop, Rock, Ballad, EDM)
                             selectedCategory,
                             ["All", "Pop", "Rock", "Ballad", "EDM"],
                             (v) {
@@ -292,17 +293,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
+            // Task 4: Home Screen (Song List) - ListView.builder to load from DB
             songProvider.isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : ListView.builder(
                     shrinkWrap: true,
-                    physics:
-                        const NeverScrollableScrollPhysics(), // Scroll managed by SingleChildScrollView
+                    physics: const NeverScrollableScrollPhysics(),
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     itemCount: songProvider.songs.length,
                     itemBuilder: (_, index) {
                       var song = songProvider.songs[index];
-                      // Each list item is wrapped in a Material Card
+                      bool isFav = song.isFavorite == 1;
+
                       return Container(
                         margin: const EdgeInsets.only(bottom: 12),
                         decoration: BoxDecoration(
@@ -321,7 +323,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: const Icon(
-                              Icons.palette_outlined,
+                              Icons.music_note_rounded,
                               color: Color(0xFF065F46),
                             ),
                           ),
@@ -333,13 +335,68 @@ class _HomeScreenState extends State<HomeScreen> {
                             "${song.artist} • ${song.year}",
                             style: const TextStyle(color: Color(0xFF64748B)),
                           ),
-                          trailing: const Icon(
-                            Icons.chevron_right_rounded,
-                            color: Color(0xFFCBD5E1),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              // Quick Task Action: Favorite
+                              IconButton(
+                                icon: Icon(
+                                  isFav
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
+                                  color: isFav
+                                      ? Colors.red
+                                      : const Color(0xFF64748B),
+                                  size: 20,
+                                ),
+                                onPressed: () async {
+                                  await favoriteProvider.toggleFavorite(
+                                    song,
+                                    songProvider,
+                                  );
+                                  if (mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          song.isFavorite == 1
+                                              ? "Added to favorites"
+                                              : "Removed from favorites",
+                                        ),
+                                        duration: const Duration(seconds: 1),
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                              // Quick Task Action: Edit
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.edit_outlined,
+                                  color: Color(0xFF64748B),
+                                  size: 20,
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => EditScreen(song: song),
+                                    ),
+                                  );
+                                },
+                              ),
+                              // Quick Task Action: Delete
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.delete_outline_rounded,
+                                  color: Color(0xFF64748B),
+                                  size: 20,
+                                ),
+                                onPressed: () =>
+                                    _confirmDelete(context, songProvider, song),
+                              ),
+                            ],
                           ),
-                          // Task: Song Detail: ======================Song Detail======================
                           onTap: () {
-                            // Navigate to the detailed view of the selected song
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -357,8 +414,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      // Task: Add Song: ======================Add Song Button======================
-      // Action button to navigate to the 'Add Song' form
+      // Task 5: Add Song - Action button to navigate to the 'Add Song' Screen
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: const Color(0xFFA7F3D0),
         foregroundColor: const Color(0xFF065F46),
@@ -441,6 +497,87 @@ class _HomeScreenState extends State<HomeScreen> {
           )
           .toList(),
       onChanged: onChanged,
+    );
+  }
+
+  /// Icon Delete On Item Displays a customized confirmation dialog before executing a permanent delete.
+  void _confirmDelete(BuildContext context, SongProvider provider, Song song) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                "Delete Song",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF1E293B),
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                "Are you sure you want to delete this song?",
+                style: TextStyle(fontSize: 16, color: Color(0xFF64748B)),
+              ),
+              const SizedBox(height: 32),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text(
+                      "Cancel",
+                      style: TextStyle(
+                        color: Color(0xFF64748B),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  SizedBox(
+                    height: 48,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        await provider.deleteSong(song.id!);
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Song deleted successfully"),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                          Navigator.pop(context); // Close dialog
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF0D6E6E),
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: Text(
+                          "Delete",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

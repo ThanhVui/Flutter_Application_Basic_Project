@@ -25,6 +25,7 @@ void main() {
   );
 }
 
+// Task 2: Session Management - Check login session before starting the app
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -32,14 +33,14 @@ class MyApp extends StatelessWidget {
   Future<Widget> _getStartScreen(BuildContext context) async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
-    // Crucial: Load the stored session into the AuthProvider's memory
+    // Task 2: Session Management - Load stored session from local storage (SharedPreferences)
     await authProvider.checkSession();
 
-    // Check login session and initialize AuthProvider state before starting
+    // Check login session and determine initial screen
     if (authProvider.isLoggedIn) {
-      return const HomeScreen();
+      return const HomeScreen(); // Task 2: Navigate to Home if logged in
     } else {
-      return const LoginScreen();
+      return const LoginScreen(); // Task 2: Navigate to Login if not
     }
   }
 
