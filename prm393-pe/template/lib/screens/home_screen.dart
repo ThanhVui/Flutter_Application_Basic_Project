@@ -81,13 +81,16 @@ class _HomeScreenState extends State<HomeScreen> {
     // final favoriteProvider = context.watch<FavoriteProvider>();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF1F5F9), 
+      backgroundColor: const Color(0xFFF1F5F9),
       // ----------------------------------------------------------------------
       // SECTION: APP BAR (HEADER)
       // Contains: Profile Icon (Task 15), Title, Favorites, Logout (Task 4)
       // ----------------------------------------------------------------------
       appBar: AppBar(
-        title: const Text("Gallery Dashboard", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        title: const Text(
+          "Gallery Dashboard",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
         backgroundColor: Colors.white,
         elevation: 0,
         // Task 15 – User Profile (Navigation): Added profile icon to the leading part of the header
@@ -269,12 +272,12 @@ class _HomeScreenState extends State<HomeScreen> {
             //   ),
             // ),
 
-            // 5. ARTWORK COLLECTION LIST: Dynamically rendered list of the user's artworks
+            // 5. ARTWORK COLLECTION LIST VIEW: Dynamically rendered list of the user's artworks
             // Padding(
             //   padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
             //   child: Text("Artwork Collection (${artworkProvider.artworks.length})", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             // ),
-            
+
             // artworkProvider.isLoading
             //     ? const Center(child: CircularProgressIndicator())
             //     : ListView.builder(
@@ -312,7 +315,114 @@ class _HomeScreenState extends State<HomeScreen> {
             //           );
             //         },
             //       ),
-            // const SizedBox(height: 100), 
+            // const SizedBox(height: 100),
+
+            // ============================================================================
+            // 5. ARTWORK COLLECTION LIST (GRID VIEW)
+            // Padding(
+            //   padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
+            //   child: Text(
+            //     "Artwork Collection (${artworkProvider.artworks.length})",
+            //     style: const TextStyle(
+            //       fontSize: 16,
+            //       fontWeight: FontWeight.bold,
+            //     ),
+            //   ),
+            // ),
+
+            // artworkProvider.isLoading
+            //     ? const Center(child: CircularProgressIndicator())
+            //     : GridView.builder(
+            //         shrinkWrap: true,
+            //         physics: const NeverScrollableScrollPhysics(), // IMPORTANT
+            //         padding: const EdgeInsets.symmetric(horizontal: 16),
+            //         itemCount: artworkProvider.artworks.length,
+            //         gridDelegate:
+            //             const SliverGridDelegateWithFixedCrossAxisCount(
+            //               crossAxisCount: 2, // 2 columns
+            //               crossAxisSpacing: 12,
+            //               mainAxisSpacing: 12,
+            //               childAspectRatio: 0.8, // chỉnh chiều cao card
+            //             ),
+            //         itemBuilder: (_, index) {
+            //           var art = artworkProvider.artworks[index];
+
+            //           return GestureDetector(
+            //             onTap: () {
+            //               Navigator.push(
+            //                 context,
+            //                 MaterialPageRoute(
+            //                   builder: (_) => DetailScreen(artwork: art),
+            //                 ),
+            //               );
+            //             },
+            //             child: Container(
+            //               decoration: BoxDecoration(
+            //                 color: Colors.white,
+            //                 borderRadius: BorderRadius.circular(20),
+            //               ),
+            //               padding: const EdgeInsets.all(12),
+            //               child: Column(
+            //                 crossAxisAlignment: CrossAxisAlignment.start,
+            //                 children: [
+            //                   // ICON / IMAGE
+            //                   Container(
+            //                     height: 80,
+            //                     width: double.infinity,
+            //                     decoration: BoxDecoration(
+            //                       color: const Color(
+            //                         0xFFA7F3D0,
+            //                       ).withOpacity(0.5),
+            //                       borderRadius: BorderRadius.circular(12),
+            //                     ),
+            //                     child: const Icon(
+            //                       Icons.palette_outlined,
+            //                       color: Color(0xFF065F46),
+            //                       size: 40,
+            //                     ),
+            //                   ),
+
+            //                   const SizedBox(height: 10),
+
+            //                   // TITLE
+            //                   Text(
+            //                     art.title,
+            //                     maxLines: 1,
+            //                     overflow: TextOverflow.ellipsis,
+            //                     style: const TextStyle(
+            //                       fontWeight: FontWeight.bold,
+            //                     ),
+            //                   ),
+
+            //                   const SizedBox(height: 4),
+
+            //                   // ARTIST
+            //                   Text(
+            //                     art.artist,
+            //                     style: const TextStyle(
+            //                       fontSize: 12,
+            //                       color: Color(0xFF64748B),
+            //                     ),
+            //                   ),
+
+            //                   const SizedBox(height: 2),
+
+            //                   // YEAR
+            //                   Text(
+            //                     art.year,
+            //                     style: const TextStyle(
+            //                       fontSize: 12,
+            //                       color: Color(0xFF94A3B8),
+            //                     ),
+            //                   ),
+            //                 ],
+            //               ),
+            //             ),
+            //           );
+            //         },
+            //       ),
+
+            // const SizedBox(height: 100),
           ],
         ),
       ),
@@ -385,7 +495,7 @@ class _HomeScreenState extends State<HomeScreen> {
   //   final isSelected = selectedSortOrder == label;
   //   return ActionChip(
   //     label: Text(label, style: TextStyle(
-  //       fontSize: 12, 
+  //       fontSize: 12,
   //       color: isSelected ? Colors.white : const Color(0xFF64748B),
   //       fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
   //     )),

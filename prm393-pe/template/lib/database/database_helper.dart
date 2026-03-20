@@ -33,8 +33,15 @@ class DBHelper {
       version: 1,
       onCreate: (db, version) async {
         print("onCreate: Creating tables and inserting mock data...");
+
+        // Create Database
         await createTables(db);
+        print("Create Database Successully!");
+
+        // Load Mock Data
         await loadMockData(db);
+        print("Load Mock Data Successully!");
+        print("Create Database and Load Mock Data Successully!");
       },
     );
   }
