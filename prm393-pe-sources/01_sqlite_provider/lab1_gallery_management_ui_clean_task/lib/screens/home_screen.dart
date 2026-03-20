@@ -68,13 +68,6 @@ class _HomeScreenState extends State<HomeScreen> {
     context.read<ArtworkProvider>().filter(selectedCategory, selectedYear, userId);
   }
 
-  /// Helper to calculate the unique number of categories available in the current collection.
-  int countCategories() {
-    final artworks = context.read<ArtworkProvider>().artworks;
-    final categories = artworks.map((e) => e.category).toSet();
-    return categories.length;
-  }
-
   @override
   Widget build(BuildContext context) {
     // Watching providers to reactively update the UI when data changes
@@ -185,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     _statCard(Icons.photo_library_outlined, artworkProvider.totalArtworks.toString(), "Artworks"),
                     _statCard(Icons.favorite_border_rounded, favoriteProvider.totalFavorites.toString(), "Favorites"),
-                    _statCard(Icons.category_outlined, countCategories().toString(), "Categories"),
+                    _statCard(Icons.category_outlined, artworkProvider.totalCategories.toString(), "Categories"),
                   ],
                 ),
               ),

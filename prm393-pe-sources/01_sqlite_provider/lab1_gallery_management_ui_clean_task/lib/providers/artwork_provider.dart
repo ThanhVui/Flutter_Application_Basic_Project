@@ -9,12 +9,16 @@ class ArtworkProvider extends ChangeNotifier {
 
   // Internal state: List of artworks currently displayed and loading status
   List<Artwork> _artworks = [];
+  List<Artwork> _allArtworks = []; // Task 14: Keeps track of the full list for total stats
   bool _isLoading = false;
 
   // Public getters to expose state to the UI (e.g., HomeScreen)
   List<Artwork> get artworks => _artworks;
   bool get isLoading => _isLoading;
-  int get totalArtworks => _artworks.length;
+  
+  // Task 14 – Gallery Statistics: Getters for total artworks and unique categories count
+  int get totalArtworks => _allArtworks.length;
+  int get totalCategories => _allArtworks.map((e) => e.category).toSet().length;
 
   // Task 5 – Home Screen (Artwork List): Fetches all artworks from the database for a specific user.
   /// Notifies listeners to show/hide loading indicators during the process.
@@ -23,7 +27,8 @@ class ArtworkProvider extends ChangeNotifier {
     notifyListeners(); 
     
     // Fetch data asynchronously from SQLite
-    _artworks = await _service.getArtworks(userId);
+    _allArtworks = await _service.getArtworks(userId);
+    _artworks = List.from(_allArtworks); // Initialize displayed list with all items
     
     _isLoading = false;
     notifyListeners(); 
