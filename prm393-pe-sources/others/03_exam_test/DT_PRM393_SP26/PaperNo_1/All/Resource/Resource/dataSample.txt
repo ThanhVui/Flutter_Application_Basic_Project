@@ -1,0 +1,118 @@
+Sample JSON Data (Users + Artworks)
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "email": "admin@gallery.com",
+      "password": "123456",
+      "createdAt": "2026-01-10"
+    },
+    {
+      "id": 2,
+      "username": "artist01",
+      "email": "artist01@gallery.com",
+      "password": "123456",
+      "createdAt": "2026-01-12"
+    }
+  ],
+  "artworks": [
+    {
+      "id": 1,
+      "title": "Starry Night",
+      "artist": "Vincent van Gogh",
+      "year": 1889,
+      "category": "Abstract",
+      "description": "A famous Abstract of a swirling night sky over a small town.",
+      "createdBy": 1
+    },
+    {
+      "id": 2,
+      "title": "Mona Lisa",
+      "artist": "Leonardo da Vinci",
+      "year": 1503,
+      "category": "Abstract",
+      "description": "A portrait Abstract known for the subject's mysterious smile.",
+      "createdBy": 1
+    },
+    {
+      "id": 3,
+      "title": "The Persistence of Memory",
+      "artist": "Salvador Dali",
+      "year": 1931,
+      "category": "Abstract",
+      "description": "A surreal Abstract featuring melting clocks.",
+      "createdBy": 1
+    },
+    {
+      "id": 4,
+      "title": "The Thinker",
+      "artist": "Auguste Rodin",
+      "year": 1902,
+      "category": "Realism",
+      "description": "A bronze Realism representing philosophy and deep thought.",
+      "createdBy": 1
+    },
+    {
+      "id": 5,
+      "title": "The Scream",
+      "artist": "Edvard Munch",
+      "year": 1893,
+      "category": "Abstract",
+      "description": "An expressionist Abstract showing anxiety and fear.",
+      "createdBy": 1
+    },
+    {
+      "id": 6,
+      "title": "Girl with a Pearl Earring",
+      "artist": "Johannes Vermeer",
+      "year": 1665,
+      "category": "Abstract",
+      "description": "A famous portrait sometimes called the Dutch Mona Lisa.",
+      "createdBy": 2
+    },
+    {
+      "id": 7,
+      "title": "David",
+      "artist": "Michelangelo",
+      "year": 1504,
+      "category": "Realism",
+      "description": "A marble statue representing the biblical hero David.",
+      "createdBy": 2
+    },
+    {
+      "id": 8,
+      "title": "The Kiss",
+      "artist": "Gustav Klimt",
+      "year": 1908,
+      "category": "Abstract",
+      "description": "A symbolist Abstract representing love and intimacy.",
+      "createdBy": 2
+    },
+    {
+      "id": 9,
+      "title": "Campbell's Soup Cans",
+      "artist": "Andy Warhol",
+      "year": 1962,
+      "category": "Landscape",
+      "description": "A famous Landscape work representing consumer culture.",
+      "createdBy": 2
+    },
+    {
+      "id": 10,
+      "title": "Balloon Dog",
+      "artist": "Jeff Koons",
+      "year": 1994,
+      "category": "Realism",
+      "description": "A shiny Realism resembling a balloon animal.",
+      "createdBy": 2
+    }
+  ]
+}
+Test Login Accounts
+
+Sinh viên có thể login nhanh bằng:
+
+Username	Password
+admin	123456
+artist01	123456
