@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/auth_provider.dart';
-import 'providers/artwork_provider.dart';
-import 'providers/favorite_provider.dart';
+import 'providers/song_provider.dart';
 import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
-import 'utils/session_manager.dart';
 
 void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
-        ChangeNotifierProvider(create: (_) => ArtworkProvider()),
-        ChangeNotifierProvider(create: (_) => FavoriteProvider()),
+        ChangeNotifierProvider(
+          create: (_) => AuthProvider(),
+        ), // Auth Provider (Login, Logout, Check Session)
+        ChangeNotifierProvider(
+          create: (_) => SongProvider(),
+        ), // Song Provider (CRUD)
       ],
       child: const MyApp(),
     ),
@@ -26,10 +27,11 @@ class MyApp extends StatelessWidget {
   /// Check login session and initialize AuthProvider state before starting
   Future<Widget> _getStartScreen(BuildContext context) async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    
+
     // Crucial: Load the stored session into the AuthProvider's memory
     await authProvider.checkSession();
-    
+
+    // Check login session and initialize AuthProvider state before starting
     if (authProvider.isLoggedIn) {
       return const HomeScreen();
     } else {

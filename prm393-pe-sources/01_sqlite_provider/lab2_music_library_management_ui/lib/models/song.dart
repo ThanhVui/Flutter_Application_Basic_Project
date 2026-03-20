@@ -1,22 +1,20 @@
 /// Model class representing
-class Artwork {
+class Song {
   int? id;
   String title;
   String artist;
   String year;
-  String category;
-  String description;
-  int createdBy;
+  String genre;
+  int isFavorite;
 
   /// Constructor for creating a new object.
-  Artwork({
+  Song({
     this.id,
     required this.title,
     required this.artist,
     required this.year,
-    required this.category,
-    required this.description,
-    required this.createdBy,
+    required this.genre,
+    required this.isFavorite,
   });
 
   /// Converts an object into a Map structure.
@@ -27,23 +25,21 @@ class Artwork {
       'title': title,
       'artist': artist,
       'year': year,
-      'category': category,
-      'description': description,
-      'createdBy': createdBy,
+      'genre': genre,
+      'isFavorite': isFavorite,
     };
   }
 
   /// Factory constructor to create an object from a database Map.
   /// Converts raw data fetched from SQLite into a structured Dart object.
-  factory Artwork.fromMap(Map<String, dynamic> map) {
-    return Artwork(
+  factory Song.fromMap(Map<String, dynamic> map) {
+    return Song(
       id: map['id'],
       title: map['title'],
       artist: map['artist'],
       year: map['year'],
-      category: map['category'],
-      description: map['description'],
-      createdBy: map['createdBy'],
+      genre: map['genre'],
+      isFavorite: map['isFavorite'],
     );
   }
 }

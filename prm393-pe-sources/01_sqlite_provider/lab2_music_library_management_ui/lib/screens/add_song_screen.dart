@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/artwork.dart';
-import '../providers/artwork_provider.dart';
+import '../models/song.dart';
+import '../providers/song_provider.dart';
 import '../providers/auth_provider.dart';
 
 /// Screen for adding a new artwork to the collection.
 /// Includes a Form with validation for Title, Artist, Year, and Description.
-class AddArtworkScreen extends StatefulWidget {
-  const AddArtworkScreen({super.key});
+class AddSongScreen extends StatefulWidget {
+  const AddSongScreen({super.key});
 
   @override
-  State<AddArtworkScreen> createState() => _AddArtworkScreenState();
+  State<AddSongScreen> createState() => _AddSongScreenState();
 }
 
-class _AddArtworkScreenState extends State<AddArtworkScreen> {
+class _AddSongScreenState extends State<AddSongScreen> {
   // Key to identify and validate the form
   final _formKey = GlobalKey<FormState>();
 
@@ -21,7 +21,7 @@ class _AddArtworkScreenState extends State<AddArtworkScreen> {
   final titleCtrl = TextEditingController();
   final artistCtrl = TextEditingController();
   final yearCtrl = TextEditingController();
-  final descCtrl = TextEditingController();
+  final genreCtrl = TextEditingController();
 
   // Predefined categories for the dropdown menu
   String selectedCategory = "Abstract";
@@ -32,32 +32,30 @@ class _AddArtworkScreenState extends State<AddArtworkScreen> {
     "Portrait",
   ];
 
-  /// Gathers input data, validates it, and saves a new Artwork to SQLite.
+  /// Gathers input data, validates it, and saves a new Song to SQLite.
   void save() async {
     // 1. Run native Flutter field validators
     if (!_formKey.currentState!.validate()) return;
 
-    final authProvider = context.read<AuthProvider>();
-    final artworkProvider = context.read<ArtworkProvider>();
+    final songProvider = context.read<SongProvider>();
 
-    // 2. Map text field values to a new Artwork model instance
-    Artwork art = Artwork(
+    // 2. Map text field values to a new Song model instance
+    Song song = Song(
       title: titleCtrl.text.trim(),
       artist: artistCtrl.text.trim(),
       year: yearCtrl.text.trim(),
-      category: selectedCategory,
-      description: descCtrl.text.trim(),
-      createdBy: authProvider.userId!, // Link artwork to the currently logged-in user
+      genre: genreCtrl.text.trim(),
+      isFavorite: 0,
     );
 
-    // 3. Persist the new artwork using the provider
-    await artworkProvider.addArtwork(art);
+    // 3. Persist the new song using the provider
+    await songProvider.addSong(song);
 
     if (mounted) {
       // 4. Provide visual feedback and return to previous screen
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Artwork added successfully!"),
+          content: Text("Song added successfully!"),
           backgroundColor: Colors.green,
         ),
       );
@@ -70,7 +68,10 @@ class _AddArtworkScreenState extends State<AddArtworkScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF1F5F9), // Light background
       appBar: AppBar(
-        title: const Text("Add Artwork", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        title: const Text(
+          "Add Song",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
@@ -96,7 +97,7 @@ class _AddArtworkScreenState extends State<AddArtworkScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  "New Artwork",
+                  "New Song",
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -104,71 +105,98 @@ class _AddArtworkScreenState extends State<AddArtworkScreen> {
                   ),
                 ),
                 const SizedBox(height: 32),
-                
-                // Input for Artwork Title
+
+                // Input for Song Title
                 _buildTextField(
                   controller: titleCtrl,
                   label: "Title",
                   icon: Icons.title_rounded,
-                  validator: (v) => (v == null || v.isEmpty) ? "Title is required" : null,
+                  validator: (v) =>
+                      (v == null || v.isEmpty) ? "Title is required" : null,
                 ),
                 const SizedBox(height: 20),
-                
+
                 // Input for Artist Name
                 _buildTextField(
                   controller: artistCtrl,
                   label: "Artist",
                   icon: Icons.person_outline_rounded,
-                  validator: (v) => (v == null || v.isEmpty) ? "Artist is required" : null,
+                  validator: (v) =>
+                      (v == null || v.isEmpty) ? "Artist is required" : null,
                 ),
                 const SizedBox(height: 20),
-                
+
                 // Input for Compilation Year with numeric check
                 _buildTextField(
                   controller: yearCtrl,
                   label: "Year",
                   icon: Icons.calendar_today_rounded,
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.text,
                   validator: (v) {
                     if (v == null || v.isEmpty) return "Year is required";
-                    if (int.tryParse(v) == null) return "Year must be a number";
                     return null;
                   },
                 ),
                 const SizedBox(height: 20),
-                
-                // Selection for Artwork Category
-                DropdownButtonFormField<String>(
-                  value: selectedCategory,
-                  decoration: InputDecoration(
-                    labelText: "Category",
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    prefixIcon: const Icon(Icons.category_outlined, color: Color(0xFF64748B)),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16.0),
-                      borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16.0),
-                      borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
-                    ),
-                  ),
-                  items: categories.map((cat) => DropdownMenuItem(value: cat, child: Text(cat))).toList(),
-                  onChanged: (value) => setState(() => selectedCategory = value!),
+
+                // Input for Compilation Genre with numeric check
+                _buildTextField(
+                  controller: genreCtrl,
+                  label: "Genre",
+                  icon: Icons.calendar_today_rounded,
+                  keyboardType: TextInputType.text,
+                  validator: (v) {
+                    if (v == null || v.isEmpty) return "Genre is required";
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 20),
-                
+
+                // // Selection for Song Category
+                // DropdownButtonFormField<String>(
+                //   value: selectedCategory,
+                //   decoration: InputDecoration(
+                //     labelText: "",
+                //     floatingLabelBehavior: FloatingLabelBehavior.always,
+                //     prefixIcon: const Icon(
+                //       Icons.category_outlined,
+                //       color: Color(0xFF64748B),
+                //     ),
+                //     contentPadding: const EdgeInsets.symmetric(
+                //       horizontal: 20,
+                //       vertical: 16,
+                //     ),
+                //     border: OutlineInputBorder(
+                //       borderRadius: BorderRadius.circular(16.0),
+                //       borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                //     ),
+                //     enabledBorder: OutlineInputBorder(
+                //       borderRadius: BorderRadius.circular(16.0),
+                //       borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                //     ),
+                //   ),
+                //   items: categories
+                //       .map(
+                //         (cat) => DropdownMenuItem(value: cat, child: Text(cat)),
+                //       )
+                //       .toList(),
+                //   onChanged: (value) =>
+                //       setState(() => selectedCategory = value!),
+                // ),
+                // const SizedBox(height: 20),
+
                 // Multi-line input for Description
-                _buildTextField(
-                  controller: descCtrl,
-                  label: "Description",
-                  icon: Icons.notes_rounded,
-                  maxLines: 4,
-                  validator: (v) => (v == null || v.isEmpty) ? "Description is required" : null,
-                ),
-                const SizedBox(height: 32),
-                
+                // _buildTextField(
+                //   controller: descCtrl,
+                //   label: "Description",
+                //   icon: Icons.notes_rounded,
+                //   maxLines: 4,
+                //   validator: (v) => (v == null || v.isEmpty)
+                //       ? "Description is required"
+                //       : null,
+                // ),
+                // const SizedBox(height: 32),
+
                 // Main save action button
                 SizedBox(
                   width: double.infinity,
@@ -184,8 +212,11 @@ class _AddArtworkScreenState extends State<AddArtworkScreen> {
                       elevation: 0,
                     ),
                     child: const Text(
-                      "Save Artwork",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      "Save Song",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
@@ -214,7 +245,10 @@ class _AddArtworkScreenState extends State<AddArtworkScreen> {
         labelText: label,
         floatingLabelBehavior: FloatingLabelBehavior.always,
         prefixIcon: Icon(icon, color: const Color(0xFF64748B)),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 16,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16.0),
           borderSide: const BorderSide(color: Color(0xFFE2E8F0)),

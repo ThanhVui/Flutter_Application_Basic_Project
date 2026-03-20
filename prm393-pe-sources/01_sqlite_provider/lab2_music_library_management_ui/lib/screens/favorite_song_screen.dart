@@ -27,12 +27,12 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     final userId = context.read<AuthProvider>().userId!;
     // toggleFavorite handles both adding and removing based on current state
     await context.read<FavoriteProvider>().toggleFavorite(userId, artworkId);
-    
+
     if (mounted) {
       // Provide quick feedback to the user
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Removed from favorites")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Removed from favorites")));
     }
   }
 
