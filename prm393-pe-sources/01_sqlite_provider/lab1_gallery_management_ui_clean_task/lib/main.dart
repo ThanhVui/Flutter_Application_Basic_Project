@@ -3,10 +3,13 @@ import 'package:provider/provider.dart';
 import 'providers/auth_provider.dart';
 import 'providers/artwork_provider.dart';
 import 'providers/favorite_provider.dart';
+// import 'package:hive_flutter/hive_flutter.dart'; // <--- Task 3 (Hive): Uncomment to use Hive
 import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // await Hive.initFlutter(); // <--- Task 3 (Hive): Uncomment to initialize Hive
   runApp(
     MultiProvider(
       providers: [

@@ -1,4 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:hive/hive.dart'; // <--- Task 3 (Hive): Import Hive if switching strategy
 
 /// Helper class to manage persistent user sessions using SharedPreferences.
 /// This allows the application to "remember" the user even after the app is closed.
@@ -44,3 +45,41 @@ class SessionManager {
     return user != null;
   }
 }
+
+/*
+// ==========================================================================
+// ALTERNATIVE STRATEGY: HIVE (Task 3 – Session Management)
+// ==========================================================================
+// To use Hive, uncomment this class and comment out the SharedPreferences one.
+// You must also uncomment Hive lines in 'main.dart' and 'pubspec.yaml'.
+
+class SessionManager {
+  static const String boxName = "sessionBox";
+
+  static Future<void> saveUser(int userId, String username) async {
+    var box = await Hive.openBox(boxName);
+    await box.put('userId', userId);
+    await box.put('username', username);
+  }
+
+  static Future<int?> getUser() async {
+    var box = await Hive.openBox(boxName);
+    return box.get('userId');
+  }
+
+  static Future<String?> getUsername() async {
+    var box = await Hive.openBox(boxName);
+    return box.get('username');
+  }
+
+  static Future<void> clearSession() async {
+    var box = await Hive.openBox(boxName);
+    await box.clear();
+  }
+
+  static Future<bool> isLoggedIn() async {
+    var box = await Hive.openBox(boxName);
+    return box.containsKey('userId');
+  }
+}
+*/
