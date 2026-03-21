@@ -27,7 +27,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   // --------------------------------------------------------------------------
-  // 1. STATE VARIABLES
+  // 1. STATE VARIABLES (Category, Year, Sort)
   // --------------------------------------------------------------------------
   // String selectedCategory = "All";
   // String selectedYear = "All";
@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // String selectedSortOrder = "A-Z";
 
   // --------------------------------------------------------------------------
-  // 2. INITIALIZATION
+  // 2. INITIALIZATION - Load data from database
   // --------------------------------------------------------------------------
   // void initState() {
   //   super.initState();
@@ -48,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // }
 
   // --------------------------------------------------------------------------
-  // 3. CORE FUNCTIONAL ACTIONS
+  // 3. CORE FUNCTIONAL ACTIONS (Logout, Search, Filter)
   // --------------------------------------------------------------------------
   // Task 4 – Logout (Action): Clears the user session and navigates back to the LoginScreen.
   // void logout() async {
@@ -76,6 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     // Watching providers to reactively update the UI when data changes
+    // Init PROVIDER
     // final authProvider = context.watch<AuthProvider>();
     // final artworkProvider = context.watch<ArtworkProvider>();
     // final favoriteProvider = context.watch<FavoriteProvider>();
